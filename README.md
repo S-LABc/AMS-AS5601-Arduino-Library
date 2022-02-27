@@ -1,5 +1,5 @@
 # AMS-AS5601-Arduino-Library
-<p align="center"><img src="/images/as5601_aliexpress_front.jpg"></p>
+<img src="/images/as5601_aliexpress_front.jpg" width="50%>
 
 * Библиотека для магнитного датчика положения [AS5600](https://github.com/S-LABc/AMS-AS5600-Arduino-Library), который похож на AS5601, но имеет другое назначение
 
