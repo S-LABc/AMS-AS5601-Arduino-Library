@@ -13,7 +13,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.0 / License MIT / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.1 / License MIT / Скляр Роман S-LAB
  */
 
 #include "AMS_AS5601.h"
@@ -202,7 +202,8 @@ byte AS5601::getBurnPositionsCount(void) {
 }
 /* 
  * @brief: получить значение начального положения ZPOS(11:0) (начальный угол)
- * @return: 0 - 4095
+ * @return:
+ *  0 - 4095
  */
 word AS5601::getZeroPosition(void) {
   AS5601::AS_SendFirstRegister(AS5601_CONFIG_REG_ZPOS_H);
@@ -210,17 +211,19 @@ word AS5601::getZeroPosition(void) {
 }
 /* 
  * brief: установить новое начальное положение ZPOS(11:0)
- * @param _start_angle: новое начальное положение 0 - 4095
+ * @param _start_angle:
+ *  0 - 4095
  */
 void AS5601::setZeroPosition(word _zero_position) {
   AS5601::AS_WriteTwoBytes(AS5601_CONFIG_REG_ZPOS_L, AS5601_CONFIG_REG_ZPOS_H, _zero_position);
 }
 /* 
  * @brief: установить новое начальное положение ZPOS(11:0) с подтверждением
- * @param _zero_position: новое начальное положение 0 - 4095
+ * @param _zero_position:
+ *  0 - 4095
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - новое значение не установлено
- *  1 AS5601_DEFAULT_REPORT_OK - новое значение успешно установлено
+ *  AS5601_DEFAULT_REPORT_ERROR - новое значение не установлено
+ *  AS5601_DEFAULT_REPORT_OK - новое значение успешно установлено
  */
 bool AS5601::setZeroPositionVerify(word _zero_position) {
   AS5601::setZeroPosition(_zero_position);
@@ -236,7 +239,7 @@ word AS5601::getRawConfigurationValue(void) {
 }
 /* 
  * @brief: установить новое значение конфигураций CONF(13:0)
- * @param _configuration_value: целое шестнадцатиричное число
+ * @param _configuration_value: новое значение конфигураций
  */
 void AS5601::setRawConfigurationValue(word _configuration_value) {
   AS5601::AS_WriteTwoBytes(AS5601_CONFIG_REG_CONF_L, AS5601_CONFIG_REG_CONF_H, _configuration_value);
@@ -244,8 +247,9 @@ void AS5601::setRawConfigurationValue(word _configuration_value) {
 /* 
  * @brief: установить новое значение конфигураций CONF(13:0) с подтверждением
  * @param _configuration_value: новое значение конфигураций
- *  0 AS5601_DEFAULT_REPORT_ERROR - новое значение не установлено
- *  1 AS5601_DEFAULT_REPORT_OK - новое значение успешно установлено
+ * @return:
+ *  AS5601_DEFAULT_REPORT_ERROR - новое значение не установлено
+ *  AS5601_DEFAULT_REPORT_OK - новое значение успешно установлено
  */
 bool AS5601::setRawConfigurationValueVerify(word _configuration_value) {
   AS5601::setRawConfigurationValue(_configuration_value);
@@ -254,10 +258,10 @@ bool AS5601::setRawConfigurationValueVerify(word _configuration_value) {
 /*
  * @brief: получить значение текущего режима питания PM(1:0)
  * @return: 
- *  0 AS5601_NOM_POWER_MODE
- *  1 AS5601_LOW_POWER_MODE_1
- *  2 AS5601_LOW_POWER_MODE_2
- *  3 AS5601_LOW_POWER_MODE_3
+ *  AS5601_NOM_POWER_MODE
+ *  AS5601_LOW_POWER_MODE_1
+ *  AS5601_LOW_POWER_MODE_2
+ *  AS5601_LOW_POWER_MODE_3
  */
 AS5601PowerModes AS5601::getPowerMode(void) {
   AS5601::AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_L);
@@ -265,7 +269,7 @@ AS5601PowerModes AS5601::getPowerMode(void) {
 }
 /*
  * @brief: установить новое значение режима питания PM(1:0)
- * @param _power_mode: значение режима
+ * @param _power_mode:
  *  AS5601_NOM_POWER_MODE
  *  AS5601_LOW_POWER_MODE_1
  *  AS5601_LOW_POWER_MODE_2
@@ -278,14 +282,14 @@ void AS5601::setPowerMode(AS5601PowerModes _power_mode) {
 }
 /*
  * @brief: установить новое значение режима питания PM(1:0) с подтверждением
- * @param _power_mode: значение режима
+ * @param _power_mode:
  *  AS5601_NOM_POWER_MODE
  *  AS5601_LOW_POWER_MODE_1
  *  AS5601_LOW_POWER_MODE_2
  *  AS5601_LOW_POWER_MODE_3
  * @return: 
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить новый режим 
- *  1 AS5601_DEFAULT_REPORT_OK - новый режим установлен
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить новый режим 
+ *  AS5601_DEFAULT_REPORT_OK - новый режим установлен
  */
 bool AS5601::setPowerModeVerify(AS5601PowerModes _power_mode) {
   AS5601::setPowerMode(_power_mode);
@@ -300,8 +304,8 @@ void AS5601::enableNomPowerMode(void) {
 /*
  * @brief: включить нормальный режим питания с подтверждением
  * @return: 
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось включить режим 
- *  1 AS5601_DEFAULT_REPORT_OK - режим включиен
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось включить режим 
+ *  AS5601_DEFAULT_REPORT_OK - режим включиен
  */
 bool AS5601::enableNomPowerModeVerify(void) {
   return AS5601::setPowerModeVerify(AS5601_NOM_POWER_MODE);
@@ -315,8 +319,8 @@ void AS5601::enableLowPowerMode1(void) {
 /*
  * @brief: включить режим питания 1 с подтверждением
  * @return: 
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось включить режим 
- *  1 AS5601_DEFAULT_REPORT_OK - режим включен
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось включить режим 
+ *  AS5601_DEFAULT_REPORT_OK - режим включен
  */
 bool AS5601::enableLowPowerMode1Verify(void) {
   return AS5601::setPowerModeVerify(AS5601_LOW_POWER_MODE_1);
@@ -330,8 +334,8 @@ void AS5601::enableLowPowerMode2(void) {
 /*
  * @brief: включить режим питания 2 с подтверждением
  * @return: 
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось включить режим 
- *  1 AS5601_DEFAULT_REPORT_OK - режим включен
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось включить режим 
+ *  AS5601_DEFAULT_REPORT_OK - режим включен
  */
 bool AS5601::enableLowPowerMode2Verify(void) {
   return AS5601::setPowerModeVerify(AS5601_LOW_POWER_MODE_2);
@@ -345,8 +349,8 @@ void AS5601::enableLowPowerMode3(void) {
 /*
  * @brief: включить режим питания 3 с подтверждением
  * @return: 
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось включить режим 
- *  1 AS5601_DEFAULT_REPORT_OK - режим включен
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось включить режим 
+ *  AS5601_DEFAULT_REPORT_OK - режим включен
  */
 bool AS5601::enableLowPowerMode3Verify(void) {
   return AS5601::setPowerModeVerify(AS5601_LOW_POWER_MODE_3);
@@ -365,7 +369,7 @@ AS5601Hysteresis AS5601::getHysteresis(void) {
 }
 /*
  * @brief: установить новые значения гистерезиса HYST(1:0)
- * @param _hysteresis: значение гистерезиса
+ * @param _hysteresis:
  *  AS5601_HYSTERESIS_OFF
  *  AS5601_HYSTERESIS_1_LSB
  *  AS5601_HYSTERESIS_2_LSB
@@ -378,14 +382,14 @@ void AS5601::setHysteresis(AS5601Hysteresis _hysteresis) {
 }
 /*
  * @brief: установить новые значения гистерезиса HYST(1:0) с подтверждением
- * @param _hysteresis: значение гистерезиса
+ * @param _hysteresis:
  *  AS5601_HYSTERESIS_OFF
  *  AS5601_HYSTERESIS_1_LSB
  *  AS5601_HYSTERESIS_2_LSB
  *  AS5601_HYSTERESIS_3_LSB
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить новое значение
- *  1 AS5601_DEFAULT_REPORT_OK - новое значение установлено
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить новое значение
+ *  AS5601_DEFAULT_REPORT_OK - новое значение установлено
  */
 bool AS5601::setHysteresisVerify(AS5601Hysteresis _hysteresis) {
   AS5601::setHysteresis(_hysteresis);
@@ -400,8 +404,8 @@ void AS5601::disableHysteresis(void) {
 /*
  * @brief: выключить гистерезис с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось включить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось включить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось включить
+ *  AS5601_DEFAULT_REPORT_OK - удалось включить
  */
 bool AS5601::disableHysteresisVerify(void) {
   return AS5601::setHysteresisVerify(AS5601_HYSTERESIS_OFF);
@@ -415,8 +419,8 @@ void AS5601::enableHysteresis1LSB(void) {
 /*
  * @brief: включить гистерезис на 1 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось включить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось включить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось включить
+ *  AS5601_DEFAULT_REPORT_OK - удалось включить
  */
 bool AS5601::enableHysteresis1LSBVerify(void) {
   return AS5601::setHysteresisVerify(AS5601_HYSTERESIS_1_LSB);
@@ -430,8 +434,8 @@ void AS5601::enableHysteresis2LSB(void) {
 /*
  * @brief: включить гистерезис на 2 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось включить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось включить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось включить
+ *  AS5601_DEFAULT_REPORT_OK - удалось включить
  */
 bool AS5601::enableHysteresis2LSBVerify(void) {
   return AS5601::setHysteresisVerify(AS5601_HYSTERESIS_2_LSB);
@@ -445,8 +449,8 @@ void AS5601::enableHysteresis3LSB(void) {
 /*
  * @brief: включить гистерезис на 3 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось включить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось включить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось включить
+ *  AS5601_DEFAULT_REPORT_OK - удалось включить
  */
 bool AS5601::enableHysteresis3LSBVerify(void) {
   return AS5601::setHysteresisVerify(AS5601_HYSTERESIS_3_LSB);
@@ -454,10 +458,10 @@ bool AS5601::enableHysteresis3LSBVerify(void) {
 /*
  * @brief: получить значение коэффициента медленной фильтрации SF(1:0)
  * @return:
- *  0 AS5601_SLOW_FILTER_16X
- *  1 AS5601_SLOW_FILTER_8X
- *  2 AS5601_SLOW_FILTER_4X
- *  3 AS5601_SLOW_FILTER_2X
+ *  AS5601_SLOW_FILTER_16X
+ *  AS5601_SLOW_FILTER_8X
+ *  AS5601_SLOW_FILTER_4X
+ *  AS5601_SLOW_FILTER_2X
  */
 AS5601SlowFilter AS5601::getSlowFilter(void) {
   AS5601::AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
@@ -465,7 +469,7 @@ AS5601SlowFilter AS5601::getSlowFilter(void) {
 }
 /*
  * @brief: установить новое значение коэффициента медленной фильтрации SF(1:0)
- * @param _slow_filter: значение коэффициента медленной фильтрации
+ * @param _slow_filter:
  *  AS5601_SLOW_FILTER_16X
  *  AS5601_SLOW_FILTER_8X
  *  AS5601_SLOW_FILTER_4X
@@ -478,14 +482,14 @@ void AS5601::setSlowFilter(AS5601SlowFilter _slow_filter) {
 }
 /*
  * @brief: установить новое значение коэффициента медленной фильтрации SF(1:0) с подтверждением
- * @param _slow_filter: значение коэффициента медленной фильтрации
+ * @param _slow_filter:
  *  AS5601_SLOW_FILTER_16X
  *  AS5601_SLOW_FILTER_8X
  *  AS5601_SLOW_FILTER_4X
  *  AS5601_SLOW_FILTER_2X
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::setSlowFilterVerify(AS5601SlowFilter _slow_filter) {
   AS5601::setSlowFilter(_slow_filter);
@@ -500,8 +504,8 @@ void AS5601::enableSlowFilter16x(void) {
 /*
  * @brief: включить коэффициент медленной фильтрации 16х с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableSlowFilter16xVerify(void) {
   return AS5601::setSlowFilterVerify(AS5601_SLOW_FILTER_16X);
@@ -515,8 +519,8 @@ void AS5601::enableSlowFilter8x(void) {
 /*
  * @brief: включить коэффициент медленной фильтрации 8х с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableSlowFilter8xVerify(void) {
   return AS5601::setSlowFilterVerify(AS5601_SLOW_FILTER_8X);
@@ -530,8 +534,8 @@ void AS5601::enableSlowFilter4x(void) {
 /*
  * @brief: включить коэффициент медленной фильтрации 4х с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableSlowFilter4xVerify(void) {
   return AS5601::setSlowFilterVerify(AS5601_SLOW_FILTER_4X);
@@ -545,8 +549,8 @@ void AS5601::enableSlowFilter2x(void) {
 /*
  * @brief: включить коэффициент медленной фильтрации 2х с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableSlowFilter2xVerify(void) {
   return AS5601::setSlowFilterVerify(AS5601_SLOW_FILTER_2X);
@@ -554,14 +558,14 @@ bool AS5601::enableSlowFilter2xVerify(void) {
 /*
  * @brief: получить значение порога быстрой фильтрации FTH(2:0)
  * @return:
- *  0 AS5601_FAST_FILTER_THRESHOLD_SLOW_FILTER_ONLY
- *  1 AS5601_FAST_FILTER_THRESHOLD_6_LSB
- *  2 AS5601_FAST_FILTER_THRESHOLD_7_LSB
- *  3 AS5601_FAST_FILTER_THRESHOLD_9_LSB
- *  4 AS5601_FAST_FILTER_THRESHOLD_18_LSB
- *  5 AS5601_FAST_FILTER_THRESHOLD_21_LSB
- *  6 AS5601_FAST_FILTER_THRESHOLD_24_LSB
- *  7 AS5601_FAST_FILTER_THRESHOLD_10_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_SLOW_FILTER_ONLY
+ *  AS5601_FAST_FILTER_THRESHOLD_6_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_7_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_9_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_18_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_21_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_24_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_10_LSB
  */
 AS5601FastFilterThreshold AS5601::getFastFilterThreshold(void) {
   AS5601::AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
@@ -569,7 +573,7 @@ AS5601FastFilterThreshold AS5601::getFastFilterThreshold(void) {
 }
 /*
  * @brief: установить новое значение порога быстрой фильтрации FTH(2:0)
- * @param _fast_filter_thredhold: значение порога быстрой фильтрации
+ * @param _fast_filter_thredhold:
  *  AS5601_FAST_FILTER_THRESHOLD_SLOW_FILTER_ONLY
  *  AS5601_FAST_FILTER_THRESHOLD_6_LSB
  *  AS5601_FAST_FILTER_THRESHOLD_7_LSB
@@ -586,7 +590,7 @@ void AS5601::setFastFilterThreshold(AS5601FastFilterThreshold _fast_filter_thred
 }
 /*
  * @brief: установить новое значение порога быстрой фильтрации FTH(2:0) с подтверждением
- * @param _fast_filter_thredhold: значение порога быстрой фильтрации
+ * @param _fast_filter_thredhold:
  *  AS5601_FAST_FILTER_THRESHOLD_SLOW_FILTER_ONLY
  *  AS5601_FAST_FILTER_THRESHOLD_6_LSB
  *  AS5601_FAST_FILTER_THRESHOLD_7_LSB
@@ -596,8 +600,8 @@ void AS5601::setFastFilterThreshold(AS5601FastFilterThreshold _fast_filter_thred
  *  AS5601_FAST_FILTER_THRESHOLD_24_LSB
  *  AS5601_FAST_FILTER_THRESHOLD_10_LSB
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::setFastFilterThresholdVerify(AS5601FastFilterThreshold _fast_filter_thredhold) {
   AS5601::setFastFilterThreshold(_fast_filter_thredhold);
@@ -612,8 +616,8 @@ void AS5601::enableSlowFilterOnly(void) {
 /*
  * @brief: включить только медленную фильтрацию с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableSlowFilterOnlyVerify(void) {
   return AS5601::setFastFilterThresholdVerify(AS5601_FAST_FILTER_THRESHOLD_SLOW_FILTER_ONLY);
@@ -627,8 +631,8 @@ void AS5601::enableFastFilterThreshold6LSB(void) {
 /*
  * @brief: включить быструю фильтрацию с порогом 6 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableFastFilterThreshold6LSBVerify(void) {
   return AS5601::setFastFilterThresholdVerify(AS5601_FAST_FILTER_THRESHOLD_6_LSB);
@@ -642,8 +646,8 @@ void AS5601::enableFastFilterThreshold7LSB(void) {
 /*
  * @brief: включить быструю фильтрацию с порогом 7 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableFastFilterThreshold7LSBVerify(void) {
   return AS5601::setFastFilterThresholdVerify(AS5601_FAST_FILTER_THRESHOLD_7_LSB);
@@ -657,8 +661,8 @@ void AS5601::enableFastFilterThreshold9LSB(void) {
 /*
  * @brief: включить быструю фильтрацию с порогом 9 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableFastFilterThreshold9LSBVerify(void) {
   return AS5601::setFastFilterThresholdVerify(AS5601_FAST_FILTER_THRESHOLD_9_LSB);
@@ -672,8 +676,8 @@ void AS5601::enableFastFilterThreshold18LSB(void) {
 /*
  * @brief: включить быструю фильтрацию с порогом 18 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableFastFilterThreshold18LSBVerify(void) {
   return AS5601::setFastFilterThresholdVerify(AS5601_FAST_FILTER_THRESHOLD_18_LSB);
@@ -687,8 +691,8 @@ void AS5601::enableFastFilterThreshold21LSB(void) {
 /*
  * @brief: включить быструю фильтрацию с порогом 21 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableFastFilterThreshold21LSBVerify(void) {
   return AS5601::setFastFilterThresholdVerify(AS5601_FAST_FILTER_THRESHOLD_21_LSB);
@@ -702,8 +706,8 @@ void AS5601::enableFastFilterThreshold24LSB(void) {
 /*
  * @brief: включить быструю фильтрацию с порогом 24 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableFastFilterThreshold24LSBVerify(void) {
   return AS5601::setFastFilterThresholdVerify(AS5601_FAST_FILTER_THRESHOLD_24_LSB);
@@ -717,8 +721,8 @@ void AS5601::enableFastFilterThreshold10LSB(void) {
 /*
  * @brief: включить быструю фильтрацию с порогом 10 LSB с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::enableFastFilterThreshold10LSBVerify(void) {
   return AS5601::setFastFilterThresholdVerify(AS5601_FAST_FILTER_THRESHOLD_10_LSB);
@@ -726,8 +730,8 @@ bool AS5601::enableFastFilterThreshold10LSBVerify(void) {
 /*
  * @brief: проверить состояние бита сторожевого таймера WD5
  * @return:
- *  0 AS5601_WATCHDOG_OFF - сторожевой таймер выключен
- *  1 AS5601_WATCHDOG_ON - сторожевой таймер включен
+ *  AS5601_WATCHDOG_OFF - сторожевой таймер выключен
+ *  AS5601_WATCHDOG_ON - сторожевой таймер включен
  */
 bool AS5601::isWatchdog(void) {
   AS5601::AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
@@ -744,8 +748,8 @@ void AS5601::enableWatchdog(void) {
 /*
  * @brief: включить сторожевой таймер WD5 с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - включение не удалось
- *  1 AS5601_DEFAULT_REPORT_OK - включение удалось
+ *  AS5601_DEFAULT_REPORT_ERROR - включение не удалось
+ *  AS5601_DEFAULT_REPORT_OK - включение удалось
  */
 bool AS5601::enableWatchdogVerify(void) {
   AS5601::enableWatchdog();
@@ -761,36 +765,36 @@ void AS5601::disableWatchdog(void) {
   AS5601::AS_WriteOneByte(AS5601_CONFIG_REG_CONF_H, conf_h_raw &= ~(1 << AS5601_CONF_BIT_WD));
 }
 /*
- * 2brief: выключить сторожевой таймер WD5 с подтверждением
+ * @brief: выключить сторожевой таймер WD5 с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - выключение не удалось
- *  1 AS5601_DEFAULT_REPORT_OK - выключение удалось
+ *  AS5601_DEFAULT_REPORT_ERROR - выключение не удалось
+ *  AS5601_DEFAULT_REPORT_OK - выключение удалось
  */
 bool AS5601::disableWatchdogVerify(void) {
   AS5601::disableWatchdog();
   AS5601::AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
-  return (bool)((AS5601::AS_RequestSingleRegister() >> AS5601_CONF_BIT_WD) & 0x01);
+  return (bool)(!((AS5601::AS_RequestSingleRegister() >> AS5601_CONF_BIT_WD) & 0x01));
 }
 /*
  * @brief: получить значение количества позиций энкодера ABN(3:0)
  * @return:
- *  0 AS5601_OUTPUT_POSITIONS_8
- *  1 AS5601_OUTPUT_POSITIONS_16
- *  2 AS5601_OUTPUT_POSITIONS_32
- *  3 AS5601_OUTPUT_POSITIONS_64
- *  4 AS5601_OUTPUT_POSITIONS_128
- *  5 AS5601_OUTPUT_POSITIONS_256
- *  6 AS5601_OUTPUT_POSITIONS_512
- *  7 AS5601_OUTPUT_POSITIONS_1024
- *  8 AS5601_OUTPUT_POSITIONS_2048
+ *  AS5601_OUTPUT_POSITIONS_8
+ *  AS5601_OUTPUT_POSITIONS_16
+ *  AS5601_OUTPUT_POSITIONS_32
+ *  AS5601_OUTPUT_POSITIONS_64
+ *  AS5601_OUTPUT_POSITIONS_128
+ *  AS5601_OUTPUT_POSITIONS_256
+ *  AS5601_OUTPUT_POSITIONS_512
+ *  AS5601_OUTPUT_POSITIONS_1024
+ *  AS5601_OUTPUT_POSITIONS_2048
  */
-AS5601OutputPositions AS5601::getQuadratureEncoderOutputPositions(void) {
+AS5601OutputPositions AS5601::getQuadratureOutputPositions(void) {
   AS5601::AS_SendFirstRegister(AS5601_CONFIG_REG_ABN);
   return (AS5601OutputPositions)AS5601::AS_RequestSingleRegister();
 }
 /*
  * @brief: установить новое значение количества позиций энкодера ABN(3:0)
- * @param _output_positions: значение количества позиций
+ * @param _output_positions:
  *  AS5601_OUTPUT_POSITIONS_8
  *  AS5601_OUTPUT_POSITIONS_16
  *  AS5601_OUTPUT_POSITIONS_32
@@ -801,12 +805,12 @@ AS5601OutputPositions AS5601::getQuadratureEncoderOutputPositions(void) {
  *  AS5601_OUTPUT_POSITIONS_1024
  *  AS5601_OUTPUT_POSITIONS_2048
  */
-void AS5601::setQuadratureEncoderOutputPositions(AS5601OutputPositions _output_positions) {
+void AS5601::setQuadratureOutputPositions(AS5601OutputPositions _output_positions) {
   AS5601::AS_WriteOneByte(AS5601_CONFIG_REG_ABN, _output_positions);
 }
 /*
  * @brief: установить новое значение количества позиций энкодера ABN(3:0) с подтверждением
- * @param _output_positions: значение количества позиций
+ * @param _output_positions:
  *  AS5601_OUTPUT_POSITIONS_8
  *  AS5601_OUTPUT_POSITIONS_16
  *  AS5601_OUTPUT_POSITIONS_32
@@ -817,151 +821,152 @@ void AS5601::setQuadratureEncoderOutputPositions(AS5601OutputPositions _output_p
  *  AS5601_OUTPUT_POSITIONS_1024
  *  AS5601_OUTPUT_POSITIONS_2048
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601OutputPositions _output_positions) {
-  AS5601::setQuadratureEncoderOutputPositions(_output_positions);
-  return (AS5601::getQuadratureEncoderOutputPositions() == _output_positions) ? AS5601_DEFAULT_REPORT_OK : AS5601_DEFAULT_REPORT_ERROR;
+bool AS5601::setQuadratureOutputPositionsVerify(AS5601OutputPositions _output_positions) {
+  AS5601::setQuadratureOutputPositions(_output_positions);
+  return (AS5601::getQuadratureOutputPositions() == _output_positions) ? AS5601_DEFAULT_REPORT_OK : AS5601_DEFAULT_REPORT_ERROR;
 }
 /*
  * @brief: включить 8 выходных позиций (шагов на оборот)
  */
-void AS5601::enableEncoderOutputPositions8(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_8);
+void AS5601::enableOutputPositions8(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_8);
 }
 /*
  * @brief: включить 8 выходных позиций (шагов на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions8Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_8);
+bool AS5601::enableOutputPositions8Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_8);
 }
 /*
  * @brief: включить 16 выходных позиций (шагов на оборот)
  */
-void AS5601::enableEncoderOutputPositions16(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_16);
+void AS5601::enableOutputPositions16(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_16);
 }
 /*
  * @brief: включить 16 выходных позиций (шагов на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions16Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_16);
+bool AS5601::enableOutputPositions16Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_16);
 }
 /*
  * @brief: включить 32 выходные позиции (шага на оборот)
  */
-void AS5601::enableEncoderOutputPositions32(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_32);
+void AS5601::enableOutputPositions32(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_32);
 }
 /*
  * @brief: включить 32 выходные позиции (шага на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions32Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_32);
+bool AS5601::enableOutputPositions32Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_32);
 }
 /*
  * @brief: включить 64 выходные позиции (шага на оборот)
  */
-void AS5601::enableEncoderOutputPositions64(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_64);
+void AS5601::enableOutputPositions64(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_64);
 }
 /*
  * @brief: включить 64 выходные позиции (шага на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions64Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_64);
+bool AS5601::enableOutputPositions64Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_64);
 }
 /*
  * @brief: включить 128 выходных позиций (шагов на оборот)
  */
-void AS5601::enableEncoderOutputPositions128(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_128);
+void AS5601::enableOutputPositions128(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_128);
 }
 /*
  * @brief: включить 128 выходных позиций (шагов на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions128Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_128);
+bool AS5601::enableOutputPositions128Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_128);
 }
 /*
  * @brief: включить 256 выходных позиций (шагов на оборот)
  */
-void AS5601::enableEncoderOutputPositions256(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_256);
+void AS5601::enableOutputPositions256(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_256);
 }
 /*
  * @brief: включить 256 выходных позиций (шагов на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions256Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_256);
+bool AS5601::enableOutputPositions256Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_256);
 }
 /*
  * @brief: включить 512 выходных позиций (шагов на оборот)
  */
-void AS5601::enableEncoderOutputPositions512(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_512);
+void AS5601::enableOutputPositions512(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_512);
 }
 /*
  * @brief: включить 512 выходных позиций (шагов на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions512Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_512);
+bool AS5601::enableOutputPositions512Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_512);
 }
 /*
  * @brief: включить 1024 выходных позиций (шагов на оборот)
  */
-void AS5601::enableEncoderOutputPositions1024(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_1024);
+void AS5601::enableOutputPositions1024(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_1024);
 }
 /*
  * @brief: включить 1024 выходных позиций (шагов на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions1024Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_1024);
+bool AS5601::enableOutputPositions1024Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_1024);
 }
 /*
  * @brief: включить 2048 выходных позиций (шагов на оборот)
  */
-void AS5601::enableEncoderOutputPositions2048(void) {
-  AS5601::setQuadratureEncoderOutputPositions(AS5601_OUTPUT_POSITIONS_2048);
+void AS5601::enableOutputPositions2048(void) {
+  AS5601::setQuadratureOutputPositions(AS5601_OUTPUT_POSITIONS_2048);
 }
 /*
  * @brief: включить 2048 выходных позиций (шагов на оборот) с подтверждением
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
-bool AS5601::enableEncoderOutputPositions2048Verify(void) {
-  return AS5601::setQuadratureEncoderOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_2048);
+bool AS5601::enableOutputPositions2048Verify(void) {
+  return AS5601::setQuadratureOutputPositionsVerify(AS5601_OUTPUT_POSITIONS_2048);
 }
 /*
  * @brief: получить значение порога срабатывания кнопки энкодера PUSHTHR(7:0)
- * @return: 0 - 255
+ * @return:
+ *  0 - 255
  */
 byte AS5601::getPushbuttonThreshold(void) {
   AS5601::AS_SendFirstRegister(AS5601_CONFIG_REG_PUSHTHR);
@@ -969,7 +974,7 @@ byte AS5601::getPushbuttonThreshold(void) {
 }
 /*
  * @brief: установить новое значение порога срабатывания кнопки энкодера PUSHTHR(7:0)
- * @param _push_thr_value: значение порога срабатывания
+ * @param _push_thr_value:
  *  0 - 255
  */
 void AS5601::setPushbuttonThreshold(byte _push_thr_value) {
@@ -977,11 +982,11 @@ void AS5601::setPushbuttonThreshold(byte _push_thr_value) {
 }
 /*
  * @brief: установить новое значение порога срабатывания кнопки энкодера PUSHTHR(7:0) с подтверждением
- * @param _push_thr_value: значение порога срабатывания
+ * @param _push_thr_value:
  *  0 - 255
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - не удалось установить
- *  1 AS5601_DEFAULT_REPORT_OK - удалось установить
+ *  AS5601_DEFAULT_REPORT_ERROR - не удалось установить
+ *  AS5601_DEFAULT_REPORT_OK - удалось установить
  */
 bool AS5601::setPushbuttonThresholdVerify(byte _push_thr_value) {
   AS5601::setPushbuttonThreshold(_push_thr_value);
@@ -992,7 +997,8 @@ bool AS5601::setPushbuttonThresholdVerify(byte _push_thr_value) {
 /**************************/
 /* 
  * @brief: получить чистое значение угла RAW ANGLE(11:0)
- * @return: 0 - 4095
+ * @return:
+ *  0 - 4095
  */
 word AS5601::getRawAngle(void) {
   AS5601::AS_SendFirstRegister(AS5601_OUT_REG_RAW_ANGLE_H);
@@ -1000,7 +1006,8 @@ word AS5601::getRawAngle(void) {
 }
 /* 
  * @brief: получить угол с учетом гистерезиса 10 LSB ANGLE(11:0)
- * @return: 0 - 4095
+ * @return:
+ *  0 - 4095
  */
 word AS5601::getAngle(void) {
   AS5601::AS_SendFirstRegister(AS5601_OUT_REG_ANGLE_H);
@@ -1011,12 +1018,12 @@ word AS5601::getAngle(void) {
 /**************************/
 /*
  * @brief: получить значение регистра STATUS(5:3)
- * @return: биты MD:5, ML:4, MH:3
- *  0 AS5601_STATUS_REPORT_MD0_ML0_MH_0 - MD = 0, ML = 0, MH = 0
- *  2 AS5601_STATUS_REPORT_MD0_ML1_MH_0 - MD = 0, ML = 1, MH = 0
- *  4 AS5601_STATUS_REPORT_MD1_ML0_MH_0 - MD = 1, ML = 0, MH = 0
- *  5 AS5601_STATUS_REPORT_MD1_ML0_MH_1 - MD = 1, ML = 0, MH = 1
- *  6 AS5601_STATUS_REPORT_MD1_ML1_MH_0 - MD = 1, ML = 1, MH = 0
+ * @return:
+ *  AS5601_STATUS_REPORT_MD0_ML0_MH_0 - MD = 0, ML = 0, MH = 0
+ *  AS5601_STATUS_REPORT_MD0_ML1_MH_0 - MD = 0, ML = 1, MH = 0
+ *  AS5601_STATUS_REPORT_MD1_ML0_MH_0 - MD = 1, ML = 0, MH = 0
+ *  AS5601_STATUS_REPORT_MD1_ML0_MH_1 - MD = 1, ML = 0, MH = 1
+ *  AS5601_STATUS_REPORT_MD1_ML1_MH_0 - MD = 1, ML = 1, MH = 0
  */
 AS5601StatusReports AS5601::getStatus(void) {
   AS5601::AS_SendFirstRegister(AS5601_STATUS_REG);
@@ -1025,8 +1032,8 @@ AS5601StatusReports AS5601::getStatus(void) {
 /*
  * @brief: определить наличие магнита MD:5
  * @return: 
- *  0 AS5601_DEFAULT_REPORT_ERROR - магнита не обнаружен
- *  1 AS5601_DEFAULT_REPORT_OK - магнит обнаружен
+ *  AS5601_DEFAULT_REPORT_ERROR - магнита не обнаружен
+ *  AS5601_DEFAULT_REPORT_OK - магнит обнаружен
  */
 bool AS5601::isMagnetDetected(void) {
   AS5601::AS_SendFirstRegister(AS5601_STATUS_REG);
@@ -1035,8 +1042,8 @@ bool AS5601::isMagnetDetected(void) {
 /*
  * @brief: определить слишком слабый магнит ML:4
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - магнит не слишком слабый
- *  1 AS5601_DEFAULT_REPORT_OK - магнит слишком слабый
+ *  AS5601_DEFAULT_REPORT_ERROR - магнит не слишком слабый
+ *  AS5601_DEFAULT_REPORT_OK - магнит слишком слабый
  */
 bool AS5601::isMagnetTooWeak(void) {
   AS5601::AS_SendFirstRegister(AS5601_STATUS_REG);
@@ -1045,8 +1052,8 @@ bool AS5601::isMagnetTooWeak(void) {
 /*
  * @brief: определить слишком сильный магнит MH:3
  * @return:
- *  0 AS5601_DEFAULT_REPORT_ERROR - магнит не слишком сильный
- *  1 AS5601_DEFAULT_REPORT_OK - магнит слишком сильный
+ *  AS5601_DEFAULT_REPORT_ERROR - магнит не слишком сильный
+ *  AS5601_DEFAULT_REPORT_OK - магнит слишком сильный
  */
 bool AS5601::isMagnetTooStrong(void) {
   AS5601::AS_SendFirstRegister(AS5601_STATUS_REG);
@@ -1064,7 +1071,8 @@ byte AS5601::getAutomaticGainControl(void) {
 }
 /* 
  * @brief: получить значение магнитуды MAGNITUDE(11:0)
- * @return: 0 - 4095
+ * @return:
+ *  0 - 4095
  */
 word AS5601::getMagnitude(void) {
   AS5601::AS_SendFirstRegister(AS5601_STATUS_REG_MAGNITUDE_H);
@@ -1077,16 +1085,16 @@ word AS5601::getMagnitude(void) {
  * @brief: записать НАВСЕГДА установленное значение в регистре ZPOS(11:0)
  * @note: ВЫПОЛНИТЬ ЭТУ КОМАНДУ МОЖНО ТОЛЬКО 3(ТРИ) РАЗА ДЛЯ ОДНОГО ДАТЧИКА 
  *  ПРИ НАЛИЧИИ МАГНИТА (MD:5 = 1) И ПРИ НАЛИЧИИ РЕСУРСА В ZMCO(1:0)!
- * @param _use_special_verify: использовать алгоритм проверки успешной записи от производителя
+ * @param _use_special_verify:
  *  AS5601_FLAG_SPECIAL_VERIFY_DISABLE
  *  AS5601_FLAG_SPECIAL_VERIFY_ENABLE
  * @return:
- *  0 AS5601_BURN_REPROT_MAGNET_NOT_FOUND
- *  1 AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY
- *  2 AS5601_BURN_REPROT_WRITE_WRONG
- *  3 AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY
- *  4 AS5601_BURN_REPROT_ZPOS_NOT_SET
- *  5 AS5601_BURN_REPROT_RESOURCE_ZMCO_ENDED
+ *  AS5601_BURN_REPROT_MAGNET_NOT_FOUND
+ *  AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY
+ *  AS5601_BURN_REPROT_WRITE_WRONG
+ *  AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY
+ *  AS5601_BURN_REPROT_ZPOS_NOT_SET
+ *  AS5601_BURN_REPROT_RESOURCE_ZMCO_ENDED
  */
 AS5601BurnReports AS5601::burnZeroPosition(AS5601SpecialVerifyFlags _use_special_verify) {
   AS5601BurnReports result = AS5601_BURN_REPROT_MAGNET_NOT_FOUND;
@@ -1127,14 +1135,14 @@ AS5601BurnReports AS5601::burnZeroPosition(AS5601SpecialVerifyFlags _use_special
  * @brief: записать НАВСЕГДА установленное значение в регистре CONF(13:0)
  * @note: ВЫПОЛНИТЬ ЭТУ КОМАНДУ МОЖНО ТОЛЬКО 1(ОДИН) РАЗ ДЛЯ ОДНОГО ДАТЧИКА 
  *  ПРИ НАЛИЧИИ МАГНИТА (MD:5 = 1)!
- * @param _use_special_verify: использовать алгоритм проверки успешной записи от производителя
+ * @param _use_special_verify:
  *  AS5601_FLAG_SPECIAL_VERIFY_DISABLE
  *  AS5601_FLAG_SPECIAL_VERIFY_ENABLE
  * @return:
- *  0 AS5601_BURN_REPROT_MAGNET_NOT_FOUND
- *  1 AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY
- *  2 AS5601_BURN_REPROT_WRITE_WRONG
- *  3 AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY
+ *  AS5601_BURN_REPROT_MAGNET_NOT_FOUND
+ *  AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY
+ *  AS5601_BURN_REPROT_WRITE_WRONG
+ *  AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY
  */
 AS5601BurnReports AS5601::burnConfiguration(AS5601SpecialVerifyFlags _use_special_verify) {
   AS5601BurnReports result = AS5601_BURN_REPROT_MAGNET_NOT_FOUND;

@@ -13,7 +13,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.0 / License MIT / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.1 / License MIT / Скляр Роман S-LAB
  */
 
 #pragma once
@@ -128,7 +128,7 @@ enum AS5601OutputPositions { // Update Rate
   AS5601_OUTPUT_POSITIONS_1024, // 7.8 kHz
   AS5601_OUTPUT_POSITIONS_2048, // 15.6 kHz
 };
-// Расшифровка результата метода getStatus
+// Ответы метода getStatus
 enum AS5601StatusReports {
   AS5601_STATUS_REPORT_MD0_ML0_MH_0,
   AS5601_STATUS_REPORT_MD0_ML1_MH_0 = 2,
@@ -141,7 +141,7 @@ enum AS5601SpecialVerifyFlags {
   AS5601_FLAG_SPECIAL_VERIFY_DISABLE,
   AS5601_FLAG_SPECIAL_VERIFY_ENABLE,
 };
-// Ответы методов burn
+// Ответы методов burnZeroPosition, burnConfiguration
 enum AS5601BurnReports {
   AS5601_BURN_REPROT_MAGNET_NOT_FOUND,
   AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY,
@@ -253,28 +253,28 @@ class AS5601 {
     void disableWatchdog(void); // Выключить сторожевой таймер
     bool disableWatchdogVerify(void); // Тоже самое, но с подтверждением
 
-    AS5601OutputPositions getQuadratureEncoderOutputPositions(void); // Получить значение количества шагов на оборот. 0 - 8, свыше 8 количество будет 2048
-    void setQuadratureEncoderOutputPositions(AS5601OutputPositions _output_positions); // Установить новое значение количества выходных позиций энкодера. 0 - 8, свыше 8 количество будет 2048
-    bool setQuadratureEncoderOutputPositionsVerify(AS5601OutputPositions _output_positions); // Тоже самое, но с подтверждением
+    AS5601OutputPositions getQuadratureOutputPositions(void); // Получить значение количества шагов на оборот. 0 - 8, свыше 8 количество будет 2048
+    void setQuadratureOutputPositions(AS5601OutputPositions _output_positions); // Установить новое значение количества выходных позиций энкодера. 0 - 8, свыше 8 количество будет 2048
+    bool setQuadratureOutputPositionsVerify(AS5601OutputPositions _output_positions); // Тоже самое, но с подтверждением
     // Отдельные режимы
-    void enableEncoderOutputPositions8(void); // Включить режим 8 шагов на оборот
-    bool enableEncoderOutputPositions8Verify(void); // Тоже самое, но с подтверждением
-    void enableEncoderOutputPositions16(void); // Включить режим 16 шагов на оборот
-    bool enableEncoderOutputPositions16Verify(void); // Тоже самое, но с подтверждением
-    void enableEncoderOutputPositions32(void); // Включить режим 32 шага на оборот
-    bool enableEncoderOutputPositions32Verify(void); // Тоже самое, но с подтверждением
-    void enableEncoderOutputPositions64(void); // Включить режим 64 шага на оборот
-    bool enableEncoderOutputPositions64Verify(void); // Тоже самое, но с подтверждением
-    void enableEncoderOutputPositions128(void); // Включить режим 128 шагов на оборот
-    bool enableEncoderOutputPositions128Verify(void); // Тоже самое, но с подтверждением
-    void enableEncoderOutputPositions256(void); // Включить режим 256 шагов на оборот
-    bool enableEncoderOutputPositions256Verify(void); // Тоже самое, но с подтверждением
-    void enableEncoderOutputPositions512(void); // Включить режим 512 шагов на оборот
-    bool enableEncoderOutputPositions512Verify(void); // Тоже самое, но с подтверждением
-    void enableEncoderOutputPositions1024(void); // Включить режим 1024 шага на оборот
-    bool enableEncoderOutputPositions1024Verify(void); // Тоже самое, но с подтверждением
-    void enableEncoderOutputPositions2048(void); // Включить режим 2048 шагов на оборот
-    bool enableEncoderOutputPositions2048Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions8(void); // Включить режим 8 шагов на оборот
+    bool enableOutputPositions8Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions16(void); // Включить режим 16 шагов на оборот
+    bool enableOutputPositions16Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions32(void); // Включить режим 32 шага на оборот
+    bool enableOutputPositions32Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions64(void); // Включить режим 64 шага на оборот
+    bool enableOutputPositions64Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions128(void); // Включить режим 128 шагов на оборот
+    bool enableOutputPositions128Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions256(void); // Включить режим 256 шагов на оборот
+    bool enableOutputPositions256Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions512(void); // Включить режим 512 шагов на оборот
+    bool enableOutputPositions512Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions1024(void); // Включить режим 1024 шага на оборот
+    bool enableOutputPositions1024Verify(void); // Тоже самое, но с подтверждением
+    void enableOutputPositions2048(void); // Включить режим 2048 шагов на оборот
+    bool enableOutputPositions2048Verify(void); // Тоже самое, но с подтверждением
     
     byte getPushbuttonThreshold(void); // Получить значение порога срабатывания кнопки. 0 - 255
     void setPushbuttonThreshold(byte _push_thr_value); // Установить новое значение порога срабатывания кнопки. 0 - 255

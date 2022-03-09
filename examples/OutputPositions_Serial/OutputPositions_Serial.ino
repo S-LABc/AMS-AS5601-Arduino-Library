@@ -35,7 +35,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.0 / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеку
@@ -113,39 +113,39 @@ void changeOutput() {
       printInfo();
     break;
     case 1:
-      Encoder.enableEncoderOutputPositions8();
+      Encoder.enableOutputPositions8();
       Serial.println("Selected 8 steps per revolution. Change the position of the encoder shaft\n");
     break;
     case 2:
-      Encoder.enableEncoderOutputPositions16();
+      Encoder.enableOutputPositions16();
       Serial.println("Selected 16 steps per revolution. Change the position of the encoder shaft\n");
     break;
     case 3:
-      Encoder.enableEncoderOutputPositions32();
+      Encoder.enableOutputPositions32();
       Serial.println("Selected 32 steps per revolution. Change the position of the encoder shaft\n");
     break;
     case 4:
-      Encoder.enableEncoderOutputPositions64();
+      Encoder.enableOutputPositions64();
       Serial.println("Selected 64 steps per revolution. Change the position of the encoder shaft\n");
     break;
     case 5:
-      Encoder.enableEncoderOutputPositions128();
+      Encoder.enableOutputPositions128();
       Serial.println("Selected 128 steps per revolution. Change the position of the encoder shaft\n");
     break;
     case 6:
-      Encoder.enableEncoderOutputPositions256();
+      Encoder.enableOutputPositions256();
       Serial.println("Selected 256 steps per revolution. Change the position of the encoder shaft\n");
     break;
     case 7:
-      Encoder.enableEncoderOutputPositions512();
+      Encoder.enableOutputPositions512();
       Serial.println("Selected 512 steps per revolution. Change the position of the encoder shaft\n");
     break;
     case 8:
-      Encoder.enableEncoderOutputPositions1024();
+      Encoder.enableOutputPositions1024();
       Serial.println("Selected 1024 steps per revolution. Change the position of the encoder shaft\n");
     break;
     case 9:
-      Encoder.enableEncoderOutputPositions2048();
+      Encoder.enableOutputPositions2048();
       Serial.println("Selected 2048 steps per revolution. Change the position of the encoder shaft\n");
     break;
     default:

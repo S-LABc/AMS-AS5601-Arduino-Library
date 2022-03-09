@@ -45,7 +45,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.0 / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеки
@@ -107,7 +107,7 @@ void setup() {
   // Настройка порога срабатывания кнопки энкодера
   Encoder.setPushbuttonThreshold(42); // см пример PushbuttonThreshold_Serial
   // Настройка шагов на один оборот
-  Encoder.enableEncoderOutputPositions256(); // см пример OutputPositions_Serial
+  Encoder.enableOutputPositions256(); // см пример OutputPositions_Serial
   
   /*
    * Encoder.begin() и Encoder.setClock() не используются
