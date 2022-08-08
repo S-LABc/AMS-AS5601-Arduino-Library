@@ -22,8 +22,6 @@
  * https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf
  * 
  * Контакты:
- ** YouTube - https://www.youtube.com/channel/UCbkE52YKRphgkvQtdwzQbZQ
- ** Telegram - https://www.t.me/slabyt
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
