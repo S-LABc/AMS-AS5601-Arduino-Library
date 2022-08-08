@@ -40,8 +40,6 @@
  * https://github.com/adafruit/Adafruit-GFX-Library
  * 
  * Контакты:
- ** YouTube - https://www.youtube.com/channel/UCbkE52YKRphgkvQtdwzQbZQ
- ** Telegram - https://www.t.me/slabyt
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
