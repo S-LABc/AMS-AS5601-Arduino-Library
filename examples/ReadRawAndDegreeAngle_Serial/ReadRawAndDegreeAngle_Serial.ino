@@ -23,7 +23,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.2 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеку
@@ -66,16 +66,17 @@ void setup() {
 }
 
 void loop() {
-  // Получаем значения АЦП для полного круга
-  uint16_t raw = Encoder.getRawAngle();
-  
   // Выводим "сырые" значения (от 0 до 4095)
   Serial.print("Угол в АЦП: ");
-  Serial.println(raw);
+  Serial.println(Encoder.getRawAngle());
 
-  // Выводим значения в градусах (от 0 до 360)
+  // Выводим значения в градусах (от 0.00 до 360.00)
   Serial.print("Угол в градусах: ");
-  Serial.println(raw * 0.08789); // 360/4096=0,087890625, 5 знаков после точки для АЦП 12 бит достаточно
+  Serial.println(Encoder.getDegreesAngle()); // RawAngle*360/4096
+  
+  // Выводим значения в радианах (от 0.00 - 6.29)
+  Serial.print("Угол в радианах: ");
+  Serial.println(Encoder.getRadiansAngle()); // DegreesAngle*pi/180
 
   // Разделение и задержка
   Serial.println();
