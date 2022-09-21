@@ -31,15 +31,11 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.0 / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеку
 #include <AMS_AS5601.h>
-
-// Раскомментировать, если используется второй аппаратный блок I2C у платы
-//TwoWire Wire2 (2, I2C_FAST_MODE);
-//#define Wire Wire2
 
 // Контакт подключения кнопки энкодера STM32
 #define BTN_ENC PB0
@@ -62,8 +58,12 @@ void setup() {
   Encoder.begin();
   // Настраиваем шину I2C на 400кГц
   Encoder.setClock();
+  //Можно на друие частоты, но работает не на всех микроконтроллерах
+  //Encoder.setClock(AS5601_I2C_CLOCK_100KHZ); // 100кГц
+  //Encoder.setClock(AS5601_I2C_CLOCK_1MHZ); // 1МГц
+  //Encoder.setClock(725000); // Пользовательское значение 725кГц
   /* 
-   *  В моем ЧАСТНОМ СЛУЧАИ(у вас могут быть другие значения) получились такие расчеты:
+   *  В моем ЧАСТНОМ СЛУЧАЕ(у вас могут быть другие значения) получились такие расчеты:
    *    При нажатой кнопке Encoder.getAutomaticGainControl() вернул значение 53
    *    При отпущеной кнопке Encoder.getAutomaticGainControl() вернул значение 69
    *    Вычитаю из значения 69 значение 53, получаю 16
@@ -84,11 +84,11 @@ void loop() {
 // Обработчик кнопки
 void btnEvents() {
   if (!btn_enc_flag && digitalRead(BTN_ENC) == HIGH) { // Нажата
-    Serial.println("btn: DOWN");
+    Serial.println("Кнопка НАЖАТА");
     btn_enc_flag = true;
   }
   if (btn_enc_flag && digitalRead(BTN_ENC) == LOW) { // Отпущена
-    Serial.println("btn: UP");
+    Serial.println("Кнопка ОТПУЩЕНА");
     btn_enc_flag = false;
   }
 }

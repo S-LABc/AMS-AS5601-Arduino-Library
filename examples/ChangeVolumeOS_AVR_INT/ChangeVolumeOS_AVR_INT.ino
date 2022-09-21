@@ -39,7 +39,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.2 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеки
@@ -56,10 +56,6 @@ bool btn_enc_flag = false;
 // Для обработчика прерываний и направления вращения
 volatile bool encoder_reset = false, encoder_flag = false, turnLeft = false, turnRight = false;
 volatile byte encoder_state = 0x00, previous_encoder_state = 0x00;
-
-// Раскомментировать, если используется второй аппаратный блок I2C у платы
-//TwoWire Wire2 (2, I2C_FAST_MODE);
-//#define Wire Wire2
 
 // Создаем объект Encoder с указанием ссылки на объект Wire
 AS5601 Encoder(&Wire);
@@ -78,6 +74,10 @@ void setup() {
   Encoder.begin();
   // Настраиваем шину I2C на 400кГц
   Encoder.setClock();
+  //Можно на друие частоты, но работает не на всех микроконтроллерах
+  //Encoder.setClock(AS5601_I2C_CLOCK_100KHZ); // 100кГц
+  //Encoder.setClock(AS5601_I2C_CLOCK_1MHZ); // 1МГц
+  //Encoder.setClock(725000); // Пользовательское значение 725кГц
   // Настройка порога срабатывания кнопки энкодера
   Encoder.setPushbuttonThreshold(42); // см пример PushbuttonThreshold_Serial
   // Настройка шагов на один оборот

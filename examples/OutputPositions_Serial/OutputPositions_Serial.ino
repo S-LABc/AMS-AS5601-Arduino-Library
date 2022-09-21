@@ -33,7 +33,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.2 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеку
@@ -54,10 +54,6 @@ int enc_step_count = 0;
 volatile bool encoder_reset = false, encoder_flag = false, turnLeft = false, turnRight = false;
 volatile byte encoder_state = 0x00, previous_encoder_state = 0x00;
 
-// Раскомментировать, если используется второй аппаратный блок I2C у платы
-//TwoWire Wire2 (2, I2C_FAST_MODE);
-//#define Wire Wire2
-
 // Создаем объект Encoder с указанием ссылки на объект Wire
 AS5601 Encoder(&Wire);
 
@@ -76,6 +72,10 @@ void setup() {
   Encoder.begin();
   // Настраиваем шину I2C на 400кГц
   Encoder.setClock();
+  //Можно на друие частоты, но работает не на всех микроконтроллерах
+  //Encoder.setClock(AS5601_I2C_CLOCK_100KHZ); // 100кГц
+  //Encoder.setClock(AS5601_I2C_CLOCK_1MHZ); // 1МГц
+  //Encoder.setClock(725000); // Пользовательское значение 725кГц
 
   // Вывод справки
   printInfo();
@@ -91,17 +91,17 @@ void loop() {
 }
 // Информация о доступных действиях
 void printInfo() {
-  Serial.println("Enter code to select encoder resolution");
-  Serial.println("0 - Show Info");
-  Serial.println("1 - 8 Steps per Turn");
-  Serial.println("2 - 16 Steps per Turn");
-  Serial.println("3 - 32 Steps per Turn");
-  Serial.println("4 - 64 Steps per Turn");
-  Serial.println("5 - 128 Steps per Turn");
-  Serial.println("6 - 256 Steps per Turn");
-  Serial.println("7 - 512 Steps per Turn");
-  Serial.println("8 - 1024 Steps per Turn");
-  Serial.println("9 - 2048 Steps per Turn\n");
+  Serial.println("Введите код для выбора выходного разрешения");
+  Serial.println("0 - Показать справку");
+  Serial.println("1 - 8 Шагов на оборот");
+  Serial.println("2 - 16 Шагов на оборот");
+  Serial.println("3 - 32 Шага на оборот");
+  Serial.println("4 - 64 Шага на оборот");
+  Serial.println("5 - 128 Шагов на оборот");
+  Serial.println("6 - 256 Шагов на оборот");
+  Serial.println("7 - 512 Шагов на оборот");
+  Serial.println("8 - 1024 Шага на оборот");
+  Serial.println("9 - 2048 Шагов на оборот\n");
 }
 // Изменение количества шагов на один оборот
 void changeOutput() {
@@ -112,42 +112,42 @@ void changeOutput() {
     break;
     case 1:
       Encoder.enableOutputPositions8();
-      Serial.println("Selected 8 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 8 шагов на оборот. Меняйте положение магнита\n");
     break;
     case 2:
       Encoder.enableOutputPositions16();
-      Serial.println("Selected 16 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 16 шагов на оборот. Меняйте положение магнита\n");
     break;
     case 3:
       Encoder.enableOutputPositions32();
-      Serial.println("Selected 32 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 32 шага на оборот. Меняйте положение магнита\n");
     break;
     case 4:
       Encoder.enableOutputPositions64();
-      Serial.println("Selected 64 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 64 шага на оборот. Меняйте положение магнита\n");
     break;
     case 5:
       Encoder.enableOutputPositions128();
-      Serial.println("Selected 128 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 128 шагов на оборот. Меняйте положение магнита\n");
     break;
     case 6:
       Encoder.enableOutputPositions256();
-      Serial.println("Selected 256 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 256 шагов на оборот. Меняйте положение магнита\n");
     break;
     case 7:
       Encoder.enableOutputPositions512();
-      Serial.println("Selected 512 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 512 шагов на оборот. Меняйте положение магнита\n");
     break;
     case 8:
       Encoder.enableOutputPositions1024();
-      Serial.println("Selected 1024 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 1024 шага на оборот. Меняйте положение магнита\n");
     break;
     case 9:
       Encoder.enableOutputPositions2048();
-      Serial.println("Selected 2048 steps per revolution. Change the position of the encoder shaft\n");
+      Serial.println("Выбрано 2048 шагов на оборот. Меняйте положение магнита\n");
     break;
     default:
-      Serial.println("ERROR CODE\n");
+      Serial.println("НЕВЕРНЫЙ КОД!\n");
       printInfo();
     break;
   }

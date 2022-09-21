@@ -69,10 +69,6 @@ int enc_step_count = 0;
 volatile bool encoder_reset = false, encoder_flag = false, turnLeft = false, turnRight = false;
 volatile byte encoder_state = 0x00, previous_encoder_state = 0x00;
 
-// Раскомментировать, если используется второй аппаратный блок I2C у платы
-//TwoWire Wire2 (2, I2C_FAST_MODE);
-//#define Wire Wire2
-
 // Ширина и высота дисплея
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 32

@@ -25,15 +25,11 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.0 / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеку
 #include <AMS_AS5601.h>
-
-// Раскомментировать, если используется второй аппаратный блок I2C у платы
-//TwoWire Wire2 (2, I2C_FAST_MODE);
-//#define Wire Wire2
 
 // Создаем объект Encoder с указанием ссылки на объект Wire
 AS5601 Encoder(&Wire);
@@ -45,21 +41,26 @@ void setup() {
   Encoder.begin();
   // Настраиваем шину I2C на 400кГц
   Encoder.setClock();
+  //Можно на друие частоты, но работает не на всех микроконтроллерах
+  //Encoder.setClock(AS5601_I2C_CLOCK_100KHZ); // 100кГц
+  //Encoder.setClock(AS5601_I2C_CLOCK_1MHZ); // 1МГц
+  //Encoder.setClock(725000); // Пользовательское значение 725кГц
   
   // Пока не подключен энкодер
   while (!Encoder.isConnected()) {
     // Выводим сообщение об отсутствии энкодера
-    Serial.println("AS5601 not detected!");
+    Serial.println("AS5601 не обнаружен!");
+    Serial.println("Проверьте I2C шину");
     delay(1000);
   }
   // Выводим сообщение о наличии энкодера
-  Serial.println("AS5601 detected!");
+  Serial.println("AS5601 обнаружен!");
 }
 
 void loop() {
-  Serial.print("Magnitude: ");
+  Serial.print("Магнитуда: ");
   Serial.println(Encoder.getMagnitude()); // Значение магнитуды
-  Serial.print("Automatic Gain Control: ");
+  Serial.print("Автоусиление: ");
   Serial.println(Encoder.getAutomaticGainControl()); // Значение автоусиления AGC
   
   Serial.println();
