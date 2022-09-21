@@ -1002,6 +1002,22 @@ word AS5601::getRawAngle(void) {
   return AS5601::AS_RequestPairRegisters();
 }
 /* 
+ * @brief: получить значение угла в градусах
+ * @return:
+ *  0.00 - 360.00
+ */
+float AS5601::getDegreesAngle(void) {
+  return ((float)AS5601::getRawAngle() * 360) / 4096;
+}
+/* 
+ * @brief: получить значение угла в радианах
+ * @return:
+ *  0.00 - 6.29
+ */
+float AS5601::getRadiansAngle(void) {
+  return (AS5601::getDegreesAngle() * M_PI) / 180;
+}
+/* 
  * @brief: получить угол с учетом гистерезиса 10 LSB ANGLE(11:0)
  * @return:
  *  0 - 4095
@@ -1009,6 +1025,22 @@ word AS5601::getRawAngle(void) {
 word AS5601::getAngle(void) {
   AS5601::AS_SendFirstRegister(AS5601_OUT_REG_ANGLE_H);
   return AS5601::AS_RequestPairRegisters();
+}
+/* 
+ * @brief: получить значение угла в градусах 10LSB
+ * @return:
+ *  0.00 - 360.00
+ */
+float AS5601::getDegreesAngle10LSB(void) {
+  return ((float)AS5601::getAngle() * 360) / 4096;
+}
+/* 
+ * @brief: получить значение угла в радианах 10LSB
+ * @return:
+ *  0.00 - 6.29
+ */
+float AS5601::getRadiansAngle10LSB(void) {
+  return (AS5601::getDegreesAngle10LSB() * M_PI) / 180;
 }
 /**************************/
 /**** STATUS REGISTERS ****/

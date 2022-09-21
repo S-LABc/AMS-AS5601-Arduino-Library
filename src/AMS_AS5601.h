@@ -283,8 +283,12 @@ class AS5601 {
     
     /* Output Registers */
     word getRawAngle(void); // Получить угол в чистом виде. 0 - 4095
+    float getDegreesAngle(void); // Получить угол в градусах. 0.00 - 360.00. Основан на значениях от getRawAngle
+    float getRadiansAngle(void); // Получить угол в радианах 0.00 - 6.29. Основан на значениях от getRawAngle
     
     word getAngle(void); // Получить угол с учетом гистерезиса 10 LSB. 0 - 4095
+    float getDegreesAngle10LSB(void); // Получить угол в градусах. 0.00 - 360.00. Основан на значениях от getAngle
+    float getRadiansAngle10LSB(void); // Получить угол в радианах 0.00 - 6.29. Основан на значениях от getAngle
 	
     /* Status Registers */
     AS5601StatusReports getStatus(void); // Получить значение регистра STATUS

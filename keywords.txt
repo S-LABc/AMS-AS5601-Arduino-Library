@@ -128,8 +128,12 @@ setPushbuttonThreshold	KEYWORD2
 setPushbuttonThresholdVerify	KEYWORD2
 
 getRawAngle	KEYWORD2
+getDegreesAngle	KEYWORD2
+getRadiansAngle	KEYWORD2
 
 getAngle	KEYWORD2
+getDegreesAngle10LSB	KEYWORD2
+getRadiansAngle10LSB	KEYWORD2
 
 getStatus	KEYWORD2
 
