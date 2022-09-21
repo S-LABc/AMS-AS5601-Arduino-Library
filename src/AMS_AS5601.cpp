@@ -1087,6 +1087,7 @@ word AS5601::getMagnitude(void) {
  *  AS5601_FLAG_SPECIAL_VERIFY_DISABLE
  *  AS5601_FLAG_SPECIAL_VERIFY_ENABLE
  * @return:
+ *  AS5601_BURN_REPROT_SENSOR_NOT_CONNECTED
  *  AS5601_BURN_REPROT_MAGNET_NOT_FOUND
  *  AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY
  *  AS5601_BURN_REPROT_WRITE_WRONG
@@ -1095,38 +1096,40 @@ word AS5601::getMagnitude(void) {
  *  AS5601_BURN_REPROT_RESOURCE_ZMCO_ENDED
  */
 AS5601BurnReports AS5601::burnZeroPosition(AS5601SpecialVerifyFlags _use_special_verify) {
-  AS5601BurnReports result = AS5601_BURN_REPROT_MAGNET_NOT_FOUND;
-  // Собираем значениях из критически выжных регистров
-  byte burn_count = AS5601::getBurnPositionsCount();
-  word z_pos = AS5601::getZeroPosition();
-
-  if(burn_count < AS5601_MAX_VALUE_ZMCO) { // Если ресурс для записи не исчерпан
-    if(z_pos > 0) { // Если значение начального положения не 0
-      // Наличие магнита проверяем НА ПОСЛЕДНЕМ ШАГЕ, перед отправлением команды на запись!
-      if(AS5601::isMagnetDetected()) { // Если магнит обнаружен
-        AS5601::AS_WriteOneByte(AS5601_BURN_REG, AS5601_CMD_BURN_ANGLE); // Отправляем команду записи
-        if(_use_special_verify) { // Если используется проверка записанного
-          AS5601::loadSavedValues(); // Загружаем из памяти ранее записанные данные
-          // Получаем загруженные данные для сравнения
-          word z_pos_now = AS5601::getZeroPosition();
-          if(z_pos == z_pos_now) { // Если записываемые данные совпадают с сохраненными
-            result = AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY;
+  AS5601BurnReports result = AS5601_BURN_REPROT_SENSOR_NOT_CONNECTED;
+  
+  if(AS5601::isConnected()) { // Если датчик подключен
+    // Собираем значениях из критически выжных регистров
+    byte burn_count = AS5601::getBurnPositionsCount();
+    word z_pos = AS5601::getZeroPosition();
+    if(burn_count < AS5601_MAX_VALUE_ZMCO) { // Если ресурс для записи не исчерпан
+      if(z_pos > 0) { // Если значение начального положения не 0
+        // Наличие магнита проверяем НА ПОСЛЕДНЕМ ШАГЕ, перед отправлением команды на запись!
+        if(AS5601::isMagnetDetected()) { // Если магнит обнаружен
+          AS5601::AS_WriteOneByte(AS5601_BURN_REG, AS5601_CMD_BURN_ANGLE); // Отправляем команду записи
+          if(_use_special_verify) { // Если используется проверка записанного
+            AS5601::loadSavedValues(); // Загружаем из памяти ранее записанные данные
+            // Получаем загруженные данные для сравнения
+            word z_pos_now = AS5601::getZeroPosition();
+            if(z_pos == z_pos_now) { // Если записываемые данные совпадают с сохраненными
+              result = AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY;
+            }else {
+              result = AS5601_BURN_REPROT_WRITE_WRONG;
+            }
           }else {
-            result = AS5601_BURN_REPROT_WRITE_WRONG;
+            result = AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY;
           }
         }else {
-          result = AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY;
+          result = AS5601_BURN_REPROT_MAGNET_NOT_FOUND;
         }
       }else {
-        result = AS5601_BURN_REPROT_MAGNET_NOT_FOUND;
+        result = AS5601_BURN_REPROT_ZPOS_NOT_SET;
       }
     }else {
-      result = AS5601_BURN_REPROT_ZPOS_NOT_SET;
+      result = AS5601_BURN_REPROT_RESOURCE_ZMCO_ENDED;
     }
-  }else {
-    result = AS5601_BURN_REPROT_RESOURCE_ZMCO_ENDED;
   }
-  
+
   return result;
 }
 /* 
@@ -1137,29 +1140,34 @@ AS5601BurnReports AS5601::burnZeroPosition(AS5601SpecialVerifyFlags _use_special
  *  AS5601_FLAG_SPECIAL_VERIFY_DISABLE
  *  AS5601_FLAG_SPECIAL_VERIFY_ENABLE
  * @return:
+ *  AS5601_BURN_REPROT_SENSOR_NOT_CONNECTED
  *  AS5601_BURN_REPROT_MAGNET_NOT_FOUND
  *  AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY
  *  AS5601_BURN_REPROT_WRITE_WRONG
  *  AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY
  */
 AS5601BurnReports AS5601::burnConfiguration(AS5601SpecialVerifyFlags _use_special_verify) {
-  AS5601BurnReports result = AS5601_BURN_REPROT_MAGNET_NOT_FOUND;
-  word conf = AS5601::getRawConfigurationValue();
+  AS5601BurnReports result = AS5601_BURN_REPROT_SENSOR_NOT_CONNECTED;
   
-  // Проверяем наличие магнита перед отправлением команды на запись!
-  if(AS5601::isMagnetDetected()) { // Если магнит обнаружен
-    AS5601::AS_WriteOneByte(AS5601_BURN_REG, AS5601_CMD_BURN_SETTINGS); // Отправляем команду записи настроек
-    if(_use_special_verify) { // Если используется проверка записанного
-      AS5601::loadSavedValues(); // Загружаем из памяти ранее записанные данные
-      // Получаем загруженные данные для сравнения
-      word conf_now = AS5601::getRawConfigurationValue();
-      if(conf == conf_now) { // Если записываемые данные совпадают с сохраненными
-        result = AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY;
+  if(AS5601::isConnected()) { // Если датчик подключен
+    word conf = AS5601::getRawConfigurationValue();
+    // Проверяем наличие магнита перед отправлением команды на запись!
+    if(AS5601::isMagnetDetected()) { // Если магнит обнаружен
+      AS5601::AS_WriteOneByte(AS5601_BURN_REG, AS5601_CMD_BURN_SETTINGS); // Отправляем команду записи настроек
+      if(_use_special_verify) { // Если используется проверка записанного
+        AS5601::loadSavedValues(); // Загружаем из памяти ранее записанные данные
+        // Получаем загруженные данные для сравнения
+        word conf_now = AS5601::getRawConfigurationValue();
+        if(conf == conf_now) { // Если записываемые данные совпадают с сохраненными
+          result = AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY;
+        }else {
+          result = AS5601_BURN_REPROT_WRITE_WRONG;
+        }
       }else {
-        result = AS5601_BURN_REPROT_WRITE_WRONG;
+        result = AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY;
       }
     }else {
-      result = AS5601_BURN_REPROT_WRITE_OK_WITHOUT_VERIFY;
+      result = AS5601_BURN_REPROT_MAGNET_NOT_FOUND;
     }
   }
   

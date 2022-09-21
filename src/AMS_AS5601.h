@@ -141,6 +141,7 @@ enum AS5601SpecialVerifyFlags {
 };
 // Ответы методов burnZeroPosition, burnConfiguration
 enum AS5601BurnReports {
+  AS5601_BURN_REPROT_SENSOR_NOT_CONNECTED,
   AS5601_BURN_REPROT_MAGNET_NOT_FOUND,
   AS5601_BURN_REPROT_WRITE_OK_WITH_VERIFY,
   AS5601_BURN_REPROT_WRITE_WRONG,
@@ -160,7 +161,7 @@ class AS5601 {
     uint16_t AS_RequestPairRegisters(void); // Запрос значения регистра размером 2 байта
 	
     void AS_WriteOneByte(uint8_t _reg, uint8_t _payload); // Запись одного байта в регистр размером 1 байт
-    void AS_WriteTwoBytes(uint8_t _low_register, uint8_t _high_register, uint16_t _payload); // Запись 2х байтов в регистр размеров 2 байта
+    void AS_WriteTwoBytes(uint8_t _low_register, uint8_t _high_register, uint16_t _payload); // Запись 2х байтов в регистр размером 2 байта
 	
   public:
     AS5601(TwoWire *twi); // Конструктор
