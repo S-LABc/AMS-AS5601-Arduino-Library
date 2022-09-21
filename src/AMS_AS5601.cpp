@@ -11,7 +11,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.1 / License MIT / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.2 / License MIT / Скляр Роман S-LAB
  */
 
 #include "AMS_AS5601.h"
@@ -225,6 +225,46 @@ void AS5601::setZeroPosition(word _zero_position) {
 bool AS5601::setZeroPositionVerify(word _zero_position) {
   AS5601::setZeroPosition(_zero_position);
   return (AS5601::getZeroPosition() == _zero_position) ? AS5601_DEFAULT_REPORT_OK : AS5601_DEFAULT_REPORT_ERROR;
+}
+/* 
+ * @brief: установить новое начальное положение в регистр ZPOS(11:0) используя нынешнее положение магнита
+ * @note: получает и отправляет значение полученное от метода getRawAngle
+ */
+void AS5601::setZeroPositionViaRawAngle(void) {
+  word raw_angle = AS5601::getRawAngle();
+  AS5601::AS_WriteTwoBytes(AS5601_CONFIG_REG_ZPOS_L, AS5601_CONFIG_REG_ZPOS_H, raw_angle);
+}
+/* 
+ * @brief: установить новое начальное положение в регистр ZPOS(11:0) используя нынешнее положение магнита с подтверждением
+ * @note: получает и отправляет значение полученное от метода getRawAngle
+ * @return:
+ *  AS5601_DEFAULT_REPORT_ERROR - новое значение не установлено
+ *  AS5601_DEFAULT_REPORT_OK- новое значение успешно установлено
+ */
+bool AS5601::setZeroPositionViaRawAngleVerify(void) {
+  word raw_angle = AS5601::getRawAngle();
+  AS5601::AS_WriteTwoBytes(AS5601_CONFIG_REG_ZPOS_L, AS5601_CONFIG_REG_ZPOS_H, raw_angle);
+  return (AS5601::getZeroPosition() == raw_angle) ? AS5601_DEFAULT_REPORT_OK : AS5601_DEFAULT_REPORT_ERROR;
+}
+/* 
+ * @brief: установить новое начальное положение в регистр ZPOS(11:0) используя нынешнее положение магнита
+ * @note: получает и отправляет значение полученное от метода getAngle (10LBS)
+ */
+void AS5601::setZeroPositionViaAngle10LSB(void) {
+  word angle = AS5601::getAngle();
+  AS5601::AS_WriteTwoBytes(AS5601_CONFIG_REG_ZPOS_L, AS5601_CONFIG_REG_ZPOS_H, angle);
+}
+/* 
+ * @brief: установить новое начальное положение в регистр ZPOS(11:0) используя нынешнее положение магнита с подтверждением
+ * @note: получает и отправляет значение полученное от метода getAngle (10LBS)
+ * @return:
+ *  AS5601_DEFAULT_REPORT_ERROR - новое значение не установлено
+ *  AS5601_DEFAULT_REPORT_OK- новое значение успешно установлено
+ */
+bool AS5601::setZeroPositionViaAngle10LSBVerify(void) {
+  word angle = AS5601::getAngle();
+  AS5601::AS_WriteTwoBytes(AS5601_CONFIG_REG_ZPOS_L, AS5601_CONFIG_REG_ZPOS_H, angle);
+  return (AS5601::getZeroPosition() == angle) ? AS5601_DEFAULT_REPORT_OK : AS5601_DEFAULT_REPORT_ERROR;
 }
 /* 
  * @brief: получить значение конфигураций CONF(13:0)

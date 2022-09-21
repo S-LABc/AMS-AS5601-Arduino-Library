@@ -28,6 +28,10 @@ getBurnPositionsCount	KEYWORD2
 getZeroPosition	KEYWORD2
 setZeroPosition	KEYWORD2
 setZeroPositionVerify	KEYWORD2
+setZeroPositionViaRawAngle	KEYWORD2
+setZeroPositionViaRawAngleVerify	KEYWORD2
+setZeroPositionViaAngle10LSB	KEYWORD2
+setZeroPositionViaAngle10LSBVerify	KEYWORD2
 
 getRawConfigurationValue	KEYWORD2
 setRawConfigurationValue	KEYWORD2

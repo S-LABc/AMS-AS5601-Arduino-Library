@@ -11,7 +11,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.1 / License MIT / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.2 / License MIT / Скляр Роман S-LAB
  */
 
 #pragma once
@@ -182,6 +182,10 @@ class AS5601 {
     word getZeroPosition(void); // Получить значение начального положения ZPOS. 0 - 4095
     void setZeroPosition(word _zero_position); // Установить новое начальное положение ZPOS
     bool setZeroPositionVerify(word _zero_position); // Тоже самое, но с подтверждением
+    void setZeroPositionViaRawAngle(void); // Установить новое начальное положение ZPOS используя нынешнее положение магнита (getRawAngle)
+    bool setZeroPositionViaRawAngleVerify(void); // Тоже самое, но с подтверждением
+    void setZeroPositionViaAngle10LSB(void); // Установить новое начальное положение ZPOS используя нынешнее положение магнита (getAngle)
+    bool setZeroPositionViaAngle10LSBVerify(void); // Тоже самое, но с подтверждением
 	
     word getRawConfigurationValue(void); // Получить значение регистра конфигураций CONF
     void setRawConfigurationValue(word _configuration_value); // Установить новое значение регистра конфигураций CONF
