@@ -19,7 +19,9 @@
 #include "Wire.h"
 
 /*=== Настройки шины I2C датчика ===*/
-#define AS5601_I2C_CLOCK 400000UL
+#define AS5601_I2C_CLOCK_100KHZ 100000UL
+#define AS5601_I2C_CLOCK_400KHZ 400000UL
+#define AS5601_I2C_CLOCK_1MHZ   1000000UL
 #define AS5601_I2C_ADDRESS 0x36
 
 /*=== Адреса регистров датчика ===*/
@@ -167,7 +169,7 @@ class AS5601 {
     AS5601(TwoWire *twi); // Конструктор
 
     void begin(void); // Вызов Wire.begin()
-    void setClock(void); // Настройка частоты на 400кГц
+    void setClock(uint32_t freq_hz = AS5601_I2C_CLOCK_400KHZ); // Настройка частоты на 100кГц, 400кГц, 1МГц, или пользовательское значение (по умолчанию 400кГц)
     void end(void); // Вызов Wire.end()
 	
     void loadSavedValues(void); // Метод производителя для загрузки значений из памяти в регистры ZPOS, CONF
