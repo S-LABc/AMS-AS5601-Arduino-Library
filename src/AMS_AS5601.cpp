@@ -11,7 +11,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.3 / License MIT / Скляр Роман S-LAB
+ * Copyright (C) 2022. v1.4 / License MIT / Скляр Роман S-LAB
  */
 
 #include "AMS_AS5601.h"
