@@ -1055,7 +1055,7 @@ float AS5601::getDegreesAngle(void) {
  *  0.00 - 6.29
  */
 float AS5601::getRadiansAngle(void) {
-  return (getDegreesAngle() * M_PI) / 180;
+  return (getDegreesAngle() * PI) / 180;
 }
 /* 
  * @brief: получить угол с учетом гистерезиса 10 LSB ANGLE(11:0)
@@ -1080,7 +1080,7 @@ float AS5601::getDegreesAngle10LSB(void) {
  *  0.00 - 6.29
  */
 float AS5601::getRadiansAngle10LSB(void) {
-  return (getDegreesAngle10LSB() * M_PI) / 180;
+  return (getDegreesAngle10LSB() * PI) / 180;
 }
 /**************************/
 /**** STATUS REGISTERS ****/
