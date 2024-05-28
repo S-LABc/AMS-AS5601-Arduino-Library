@@ -4,14 +4,14 @@
  * AS5601 от компании AMS https://ams.com/ams-start
  * 
  * Документация к датчику:
- ** https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf
- ** https://ams.com/en/as5601
+ ** https://look.ams-osram.com/m/6dd0193ab2116bc6/original/AS5601-DS000395.pdf
+ ** https://ams-osram.com/products/sensors/position-sensors/ams-as5601-position-sensor
  * 
  * Контакты:
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.4 / License MIT / Скляр Роман S-LAB
+ * Copyright (C) 2024. v1.5 / License MIT / Скляр Роман S-LAB
  */
 
 #pragma once
@@ -23,6 +23,9 @@ const uint32_t AS5601_I2C_CLOCK_100KHZ = 100000;
 const uint32_t AS5601_I2C_CLOCK_400KHZ = 400000;
 const uint32_t AS5601_I2C_CLOCK_1MHZ   = 1000000;
 const uint8_t AS5601_I2C_ADDRESS       = 0x36;
+
+// Количество регистров в памяти датчика для чтения
+const uint8_t AS5601_REGISTER_MAP_SIZE = 0x10;
 
 /*=== Адреса регистров датчика ===*/
 /* Configuration Registers */
@@ -155,9 +158,9 @@ enum AS5601BurnReports {
 
 class AS5601 {
   private:
-    TwoWire* _wire_; // Объект для доступа к методам I2C Wire.h
 
   protected:
+    TwoWire *_wire_; // Объект для доступа к методам I2C Wire.h
     virtual void AS_SendFirstRegister(uint8_t _reg_addr); // Отправить адрес регистра
     virtual uint8_t AS_RequestSingleRegister(void); // Запрос значения регистра размером 1 байт
     virtual uint16_t AS_RequestPairRegisters(void); // Запрос значения регистра размером 2 байта
@@ -166,22 +169,27 @@ class AS5601 {
     virtual void AS_WriteTwoBytes(uint8_t _low_register, uint8_t _high_register, uint16_t _payload); // Запись 2х байтов в регистр размером 2 байта
 	
   public:
-    AS5601(TwoWire* _twi); // Конструктор
+    AS5601(TwoWire *_twi); // Конструктор
 
     virtual void begin(void); // Вызов Wire.begin()
-#if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266) || defined(ESP32) || defined(ARDUINO_ARCH_STM32)
     virtual void begin(int8_t _sda_pin, int8_t _scl_pin); // Вызов Wire.begin(SDA, SCL) с указанием выводов
 #endif
+
     virtual void setClock(uint32_t _freq_hz = AS5601_I2C_CLOCK_400KHZ); // Настройка частоты на 100кГц, 400кГц, 1МГц, или пользовательское значение (по умолчанию 400кГц)
 	
     virtual void loadSavedValues(void); // Метод производителя для загрузки значений из памяти в регистры ZPOS, CONF
 	
     virtual bool isConnected(void); // Проверка наличия датчика на шине I2C
+
+    virtual bool getAllRegisters(byte *_registers, byte _array_size); // Получить значения всех регистров датчика в вие массива из 16 байт через ссылку
 	
     /* Configuration Registers */
     virtual byte getBurnPositionsCount(void); // Получить количество сохранений(burn) значений в ZPOS (с завода ZMCO = 0). 0 - 3
+    virtual void getBurnPositionsCount(byte &_burn_positions_count); // Тоже самое, но через ссылку
 	
     virtual word getZeroPosition(void); // Получить значение начального положения ZPOS. 0 - 4095
+    virtual void getZeroPosition(word &_zero_position); // Тоже самое, но через ссылку
     virtual void setZeroPosition(word _zero_position); // Установить новое начальное положение ZPOS
     virtual bool setZeroPositionVerify(word _zero_position); // Тоже самое, но с подтверждением
     virtual void setZeroPositionViaRawAngle(void); // Установить новое начальное положение ZPOS используя нынешнее положение магнита (getRawAngle)
@@ -190,10 +198,12 @@ class AS5601 {
     virtual bool setZeroPositionViaAngle10LSBVerify(void); // Тоже самое, но с подтверждением
 	
     virtual word getRawConfigurationValue(void); // Получить значение регистра конфигураций CONF
+    virtual void getRawConfigurationValue(word &_configuration_value); // Тоже самое, но через ссылку
     virtual void setRawConfigurationValue(word _configuration_value); // Установить новое значение регистра конфигураций CONF
     virtual bool setRawConfigurationValueVerify(word _configuration_value); // Тоже самое, но с подтверждением
     /** Управление Power Mode битами PM **/
     virtual AS5601PowerModes getPowerMode(void); // Получить текущий режим питания
+    virtual void getPowerMode(AS5601PowerModes &_power_mode); // Тоже самое, но через ссылку
     virtual void setPowerMode(AS5601PowerModes _power_mode); // Установить новый режим питания
     virtual bool setPowerModeVerify(AS5601PowerModes _power_mode); // Тоже самое, но с подтверждением
     // Отдельные режимы
@@ -207,6 +217,7 @@ class AS5601 {
     virtual bool enableLowPowerMode3Verify(void); // Тоже самое, но с подтверждением
     /** Управление Hysteresis битами HYST **/
     virtual AS5601Hysteresis getHysteresis(void); // Получить параметры гистерезиса
+    virtual void getHysteresis(AS5601Hysteresis &_hysteresis); // Тоже самое, но через ссылку
     virtual void setHysteresis(AS5601Hysteresis _hysteresis); // Установить новые параметры гистерезиса
     virtual bool setHysteresisVerify(AS5601Hysteresis _hysteresis); // Тоже самое, но с подтверждением
     // Отдельные режимы
@@ -220,6 +231,7 @@ class AS5601 {
     virtual bool enableHysteresis3LSBVerify(void); // Тоже самое, но с подтверждением
     /** Управление Slow Filter битами SF **/
     virtual AS5601SlowFilter getSlowFilter(void); // Получить коэффициент медленной фильтрации
+    virtual void getSlowFilter(AS5601SlowFilter &_slow_filter); // Тоже самое, но через ссылку
     virtual void setSlowFilter(AS5601SlowFilter _slow_filter); // Установить новый коэффициент медленной фильтрации
     virtual bool setSlowFilterVerify(AS5601SlowFilter _slow_filter); // Тоже самое, но с подтверждением
     // Отдельные режимы
@@ -233,6 +245,7 @@ class AS5601 {
     virtual bool enableSlowFilter2xVerify(void); // Тоже самое, но с подтверждением
     /** Управление Fast Filter Threshold битами FTH **/
     virtual AS5601FastFilterThreshold getFastFilterThreshold(void); // Получить порог быстрой фильтрации
+    virtual void getFastFilterThreshold(AS5601FastFilterThreshold &_fast_filter_threshold); // Тоже самое, но через ссылку
     virtual void setFastFilterThreshold(AS5601FastFilterThreshold _fast_filter_thredhold); // Установить порог быстрой фильтрации
     virtual bool setFastFilterThresholdVerify(AS5601FastFilterThreshold _fast_filter_thredhold); // Тоже самое, но с подтверждением
     // Отдельные режимы
@@ -261,6 +274,7 @@ class AS5601 {
     virtual bool disableWatchdogVerify(void); // Тоже самое, но с подтверждением
 
     virtual AS5601OutputPositions getQuadratureOutputPositions(void); // Получить значение количества шагов на оборот. 0 - 8, свыше 8 количество будет 2048
+    virtual void getQuadratureOutputPositions(AS5601OutputPositions &_output_positions); // Тоже самое, но через ссылку
     virtual void setQuadratureOutputPositions(AS5601OutputPositions _output_positions); // Установить новое значение количества выходных позиций энкодера. 0 - 8, свыше 8 количество будет 2048
     virtual bool setQuadratureOutputPositionsVerify(AS5601OutputPositions _output_positions); // Тоже самое, но с подтверждением
     // Отдельные режимы
@@ -284,28 +298,41 @@ class AS5601 {
     virtual bool enableOutputPositions2048Verify(void); // Тоже самое, но с подтверждением
     
     virtual byte getPushbuttonThreshold(void); // Получить значение порога срабатывания кнопки. 0 - 255
+    virtual void getPushbuttonThreshold(byte &_pushbutton_threshold); // Тоже самое, но через ссылку
     virtual void setPushbuttonThreshold(byte _push_thr_value); // Установить новое значение порога срабатывания кнопки. 0 - 255
     virtual bool setPushbuttonThresholdVerify(byte _push_thr_value); // Тоже самое, но с подтверждением
     
     /* Output Registers */
     virtual word getRawAngle(void); // Получить угол в чистом виде. 0 - 4095
+    virtual void getRawAngle(word &_raw_angle); // Тоже самое, но через ссылку
     virtual float getDegreesAngle(void); // Получить угол в градусах. 0.00 - 360.00. Основан на значениях от getRawAngle
-    virtual float getRadiansAngle(void); // Получить угол в радианах 0.00 - 6.29. Основан на значениях от getRawAngle
+    virtual void getDegreesAngle(float &_degrees_angle); // Тоже самое, но через ссылку
+    virtual float getRadiansAngle(void); // Получить угол в радианах 0.00 - 6.28. Основан на значениях от getRawAngle
+    virtual void getRadiansAngle(float &_radians_angle); // Тоже самое, но через ссылку
     
     virtual word getAngle(void); // Получить угол с учетом гистерезиса 10 LSB. 0 - 4095
+    virtual void getAngle(word &_10lsb_angle); // Тоже самое, но через ссылку
     virtual float getDegreesAngle10LSB(void); // Получить угол в градусах. 0.00 - 360.00. Основан на значениях от getAngle
-    virtual float getRadiansAngle10LSB(void); // Получить угол в радианах 0.00 - 6.29. Основан на значениях от getAngle
+    virtual void getDegreesAngle10LSB(float &_10lsb_degrees_angle); // Тоже самое, но через ссылку
+    virtual float getRadiansAngle10LSB(void); // Получить угол в радианах 0.00 - 6.28. Основан на значениях от getAngle
+    virtual void getRadiansAngle10LSB(float &_10lsb_radians_angle); // Тоже самое, но через ссылку
 	
     /* Status Registers */
     virtual AS5601StatusReports getStatus(void); // Получить значение регистра STATUS
+    virtual void getStatus(AS5601StatusReports &_status); // Тоже самое, но через ссылку
     
     virtual bool isMagnetDetected(void); // Определить наличие магнита
+    virtual void isMagnetDetected(bool &_magnet_detect); // Тоже самое, но через ссылку
     virtual bool isMagnetTooWeak(void); // Определить является ли магнит очень СЛАБЫМ
+    virtual void isMagnetTooWeak(bool &_magnet_weak); // Тоже самое, но через ссылку
     virtual bool isMagnetTooStrong(void); // Определить является ли магнит очень СИЛЬНЫМ
+    virtual void isMagnetTooStrong(bool &_magnet_strong); // Тоже самое, но через ссылку
 	
     virtual byte getAutomaticGainControl(void); // Получить значение автоусиления. При 5В 0 - 255, при 3.3В 0 - 128
+    virtual void getAutomaticGainControl(byte &_agc); // Тоже самое, но через ссылку
 	
     virtual word getMagnitude(void); // Получить значение магнитуды. 0 - 4095
+    virtual void getMagnitude(word &_magnitude); // Тоже самое, но через ссылку
     
     /* Burn Commands */
     virtual AS5601BurnReports burnZeroPosition(AS5601SpecialVerifyFlags _use_special_verify = AS5601_FLAG_SPECIAL_VERIFY_ENABLE); // Записать навсегда ZPOS. CMD_BURN_ANGLE [3 РАЗА МАКСИМУМ!]

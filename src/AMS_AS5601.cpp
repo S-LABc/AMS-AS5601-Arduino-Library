@@ -4,14 +4,14 @@
  * AS5601 от компании AMS https://ams.com/ams-start
  * 
  * Документация к датчику:
- ** https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf
- ** https://ams.com/en/as5601
+ ** https://look.ams-osram.com/m/6dd0193ab2116bc6/original/AS5601-DS000395.pdf
+ ** https://ams-osram.com/products/sensors/position-sensors/ams-as5601-position-sensor
  * 
  * Контакты:
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.4 / License MIT / Скляр Роман S-LAB
+ * Copyright (C) 2024. v1.5 / License MIT / Скляр Роман S-LAB
  */
 
 #include "AMS_AS5601.h"
@@ -21,7 +21,7 @@
  * @brief: использовать только интерфейс I2C
  * @param _twi: доступ к методам объекта Wire
  */
-AS5601::AS5601(TwoWire* _twi) : _wire_(_twi ? _twi : &Wire) {
+AS5601::AS5601(TwoWire *_twi) : _wire_(_twi ? _twi : &Wire) {
   // Ничего
 }
  
@@ -132,6 +132,20 @@ void AS5601::begin(int8_t _sda_pin, int8_t _scl_pin) {
 }
 #endif
 /* 
+ * @brief: вызов методов Wire.setSDA(SDA) Wire.setSCL(SCL) Wire.begin()
+ * @param _sda_pin: пользовательский контакт SDA
+ * @param _scl_pin: пользовательский контакт SCL
+ * @note: использовать, если действие не было выполнено ранее.
+ *   Применимо для платформы STM32
+ */
+#if defined(ARDUINO_ARCH_STM32)
+void AS5601::begin(int8_t _sda_pin, int8_t _scl_pin) {
+  _wire_->setSDA(_sda_pin);
+  _wire_->setSCL(_scl_pin);
+  _wire_->begin();
+}
+#endif
+/* 
  * @brief: настройка частоты шины I2C
  * @note: использовать, если частота шины меняется из-за разных устройств. по умолчанию 400кГц
  */
@@ -181,6 +195,90 @@ bool AS5601::isConnected(void) {
   _wire_->beginTransmission(AS5601_I2C_ADDRESS);
   return (!_wire_->endTransmission(AS5601_I2C_ADDRESS)) ? AS5601_DEFAULT_REPORT_OK : AS5601_DEFAULT_REPORT_ERROR;
 }
+/*
+ * @brief: получить значения всех регистров датчика
+ * @note: 
+ */
+bool AS5601::getAllRegisters(byte *_registers, byte _array_size) {
+  // Проверка на размер массива
+  if (_array_size < AS5601_REGISTER_MAP_SIZE) {
+    return AS5601_DEFAULT_REPORT_ERROR;
+  }
+
+  // Начать передачу по адресу
+  _wire_->beginTransmission(AS5601_I2C_ADDRESS);
+  // Отправить адрес регистра 0x00
+  _wire_->write(AS5601_CONFIG_REG_ZMCO);
+  // Завершить соединение
+  _wire_->endTransmission();
+  // Запросить 3 байта данных по адресу
+  _wire_->requestFrom(AS5601_I2C_ADDRESS, (uint8_t)3);
+  // Прочитать данные из буфера
+  if (_wire_->available() >= 1 ) {
+    _registers[0] = _wire_->read(); // AS5601_CONFIG_REG_ZMCO (0x00)
+    _registers[1] = _wire_->read(); // AS5601_CONFIG_REG_ZPOS_H (0x01)
+    _registers[2] = _wire_->read(); // AS5601_CONFIG_REG_ZPOS_L (0x02)
+  }
+  // Завершить соединение
+  _wire_->endTransmission();
+
+  // Начать передачу по адресу
+  _wire_->beginTransmission(AS5601_I2C_ADDRESS);
+  // Отправить адрес регистра 0x07
+  _wire_->write(AS5601_CONFIG_REG_CONF_H);
+  // Завершить соединение
+  _wire_->endTransmission();
+  // Запросить 9 байт данных по адресу
+  _wire_->requestFrom(AS5601_I2C_ADDRESS, (uint8_t)9);
+  // Прочитать данные из буфера
+  if (_wire_->available() >= 1 ) {
+    _registers[3] = _wire_->read(); // AS5601_CONFIG_REG_CONF_H (0x07)
+    _registers[4] = _wire_->read(); // AS5601_CONFIG_REG_CONF_L (0x08)
+    _registers[5] = _wire_->read(); // AS5601_CONFIG_REG_ABN (0x09)
+    _registers[6] = _wire_->read(); // AS5601_CONFIG_REG_PUSHTHR (0x0A)
+    _registers[7] = _wire_->read(); // AS5601_STATUS_REG (0x0B)
+    _registers[8] = _wire_->read(); // AS5601_OUT_REG_RAW_ANGLE_H (0x0C)
+    _registers[9] = _wire_->read(); // AS5601_OUT_REG_RAW_ANGLE_L (0x0D)
+    _registers[10] = _wire_->read(); // AS5601_OUT_REG_ANGLE_H (0x0E)
+    _registers[11] = _wire_->read(); // AS5601_OUT_REG_ANGLE_L (0x0F)
+  }
+  // Завершить соединение
+  _wire_->endTransmission();
+
+  // Начать передачу по адресу
+  _wire_->beginTransmission(AS5601_I2C_ADDRESS);
+  // Отправить адрес регистра 0x1A
+  _wire_->write(AS5601_STATUS_REG_AGC);
+  // Завершить соединение
+  _wire_->endTransmission();
+  // Запросить 3 байта данных по адресу
+  _wire_->requestFrom(AS5601_I2C_ADDRESS, (uint8_t)3);
+  // Прочитать данные из буфера
+  if (_wire_->available() >= 1 ) {
+    _registers[12] = _wire_->read(); // AS5601_STATUS_REG_AGC (0x1A)
+    _registers[13] = _wire_->read(); // AS5601_STATUS_REG_MAGNITUDE_H (0x1B)
+    _registers[14] = _wire_->read(); // AS5601_STATUS_REG_MAGNITUDE_L (0x1C)
+  }
+  // Завершить соединение
+  _wire_->endTransmission();
+
+  // Начать передачу по адресу
+  _wire_->beginTransmission(AS5601_I2C_ADDRESS);
+  // Отправить адрес регистра 0xFF
+  _wire_->write(AS5601_BURN_REG);
+  // Завершить соединение
+  _wire_->endTransmission();
+  // Запросить 1 байт данных по адресу
+  _wire_->requestFrom(AS5601_I2C_ADDRESS, (uint8_t)1);
+  // Прочитать данные из буфера
+  if (_wire_->available() >= 1 ) {
+    _registers[15] = _wire_->read(); // AS5601_BURN_REG (0xFF)
+  }
+  // Завершить соединение
+  _wire_->endTransmission();
+
+  return AS5601_DEFAULT_REPORT_OK;
+}
 
 /*********************************/
 /**** CONFIGURATION REGISTERS ****/
@@ -197,6 +295,19 @@ byte AS5601::getBurnPositionsCount(void) {
   AS_SendFirstRegister(AS5601_CONFIG_REG_ZMCO);
   return AS_RequestSingleRegister();
 }
+/*
+ * @brief: получить количество записей значения в ZPOS из ZMCO(1:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  0 - заводское значение
+ *  1 - в ZPOS записано один раз
+ *  2 - в ZPOS записано два раза
+ *  3 - в ZPOS записано три раза
+ */
+void AS5601::getBurnPositionsCount(byte &_burn_positions_count) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_ZMCO);
+  _burn_positions_count = AS_RequestSingleRegister();
+}
 /* 
  * @brief: получить значение начального положения ZPOS(11:0) (начальный угол)
  * @return:
@@ -205,6 +316,16 @@ byte AS5601::getBurnPositionsCount(void) {
 word AS5601::getZeroPosition(void) {
   AS_SendFirstRegister(AS5601_CONFIG_REG_ZPOS_H);
   return AS_RequestPairRegisters();
+}
+/* 
+ * @brief: получить значение начального положения ZPOS(11:0) (начальный угол)
+ * @note: метод работает через ссылку
+ * @return:
+ *  0 - 4095
+ */
+void AS5601::getZeroPosition(word &_zero_position) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_ZPOS_H);
+  _zero_position = AS_RequestPairRegisters();
 }
 /* 
  * brief: установить новое начальное положение ZPOS(11:0)
@@ -275,6 +396,15 @@ word AS5601::getRawConfigurationValue(void) {
   return AS_RequestPairRegisters();
 }
 /* 
+ * @brief: получить значение конфигураций CONF(13:0)
+ * @note: метод работает через ссылку
+ * @return: целое шестнадцатиричное число
+ */
+void AS5601::getRawConfigurationValue(word &_configuration_value) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
+  _configuration_value = AS_RequestPairRegisters();
+}
+/* 
  * @brief: установить новое значение конфигураций CONF(13:0)
  * @param _configuration_value: новое значение конфигураций
  */
@@ -303,6 +433,19 @@ bool AS5601::setRawConfigurationValueVerify(word _configuration_value) {
 AS5601PowerModes AS5601::getPowerMode(void) {
   AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_L);
   return (AS5601PowerModes)(AS_RequestSingleRegister() & 0x03); // 0x03=0b00000011
+}
+/*
+ * @brief: получить значение текущего режима питания PM(1:0)
+ * @note: метод работает через ссылку
+ * @return: 
+ *  AS5601_NOM_POWER_MODE
+ *  AS5601_LOW_POWER_MODE_1
+ *  AS5601_LOW_POWER_MODE_2
+ *  AS5601_LOW_POWER_MODE_3
+ */
+void AS5601::getPowerMode(AS5601PowerModes &_power_mode) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_L);
+  _power_mode = (AS5601PowerModes)(AS_RequestSingleRegister() & 0x03); // 0x03=0b00000011
 }
 /*
  * @brief: установить новое значение режима питания PM(1:0)
@@ -405,6 +548,19 @@ AS5601Hysteresis AS5601::getHysteresis(void) {
   return (AS5601Hysteresis)((AS_RequestSingleRegister() >> AS5601_CONF_BIT_HYST_0) & 0x03); // 0x03=0b00000011
 }
 /*
+ * @brief: получить установленное значение гистерезиса HYST(1:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  AS5601_HYSTERESIS_OFF
+ *  AS5601_HYSTERESIS_1_LSB
+ *  AS5601_HYSTERESIS_2_LSB
+ *  AS5601_HYSTERESIS_3_LSB
+ */
+void AS5601::getHysteresis(AS5601Hysteresis &_hysteresis) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_L);
+  _hysteresis = (AS5601Hysteresis)((AS_RequestSingleRegister() >> AS5601_CONF_BIT_HYST_0) & 0x03); // 0x03=0b00000011
+}
+/*
  * @brief: установить новые значения гистерезиса HYST(1:0)
  * @param _hysteresis:
  *  AS5601_HYSTERESIS_OFF
@@ -503,6 +659,19 @@ bool AS5601::enableHysteresis3LSBVerify(void) {
 AS5601SlowFilter AS5601::getSlowFilter(void) {
   AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
   return (AS5601SlowFilter)(AS_RequestSingleRegister() & 0x03); // 0x03=0b00000011
+}
+/*
+ * @brief: получить значение коэффициента медленной фильтрации SF(1:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  AS5601_SLOW_FILTER_16X
+ *  AS5601_SLOW_FILTER_8X
+ *  AS5601_SLOW_FILTER_4X
+ *  AS5601_SLOW_FILTER_2X
+ */
+void AS5601::getSlowFilter(AS5601SlowFilter &_slow_filter) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
+  _slow_filter = (AS5601SlowFilter)(AS_RequestSingleRegister() & 0x03); // 0x03=0b00000011
 }
 /*
  * @brief: установить новое значение коэффициента медленной фильтрации SF(1:0)
@@ -607,6 +776,23 @@ bool AS5601::enableSlowFilter2xVerify(void) {
 AS5601FastFilterThreshold AS5601::getFastFilterThreshold(void) {
   AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
   return (AS5601FastFilterThreshold)((AS_RequestSingleRegister() >> AS5601_CONF_BIT_FTH_0) & 0x07); // 0x07=0b00000111
+}
+/*
+ * @brief: получить значение порога быстрой фильтрации FTH(2:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  AS5601_FAST_FILTER_THRESHOLD_SLOW_FILTER_ONLY
+ *  AS5601_FAST_FILTER_THRESHOLD_6_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_7_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_9_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_18_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_21_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_24_LSB
+ *  AS5601_FAST_FILTER_THRESHOLD_10_LSB
+ */
+void AS5601::getFastFilterThreshold(AS5601FastFilterThreshold &_fast_filter_threshold) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_CONF_H);
+  _fast_filter_threshold = (AS5601FastFilterThreshold)((AS_RequestSingleRegister() >> AS5601_CONF_BIT_FTH_0) & 0x07); // 0x07=0b00000111
 }
 /*
  * @brief: установить новое значение порога быстрой фильтрации FTH(2:0)
@@ -830,6 +1016,24 @@ AS5601OutputPositions AS5601::getQuadratureOutputPositions(void) {
   return (AS5601OutputPositions)AS_RequestSingleRegister();
 }
 /*
+ * @brief: получить значение количества позиций энкодера ABN(3:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  AS5601_OUTPUT_POSITIONS_8
+ *  AS5601_OUTPUT_POSITIONS_16
+ *  AS5601_OUTPUT_POSITIONS_32
+ *  AS5601_OUTPUT_POSITIONS_64
+ *  AS5601_OUTPUT_POSITIONS_128
+ *  AS5601_OUTPUT_POSITIONS_256
+ *  AS5601_OUTPUT_POSITIONS_512
+ *  AS5601_OUTPUT_POSITIONS_1024
+ *  AS5601_OUTPUT_POSITIONS_2048
+ */
+void AS5601::getQuadratureOutputPositions(AS5601OutputPositions &_output_positions) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_ABN);
+  _output_positions = (AS5601OutputPositions)AS_RequestSingleRegister();
+}
+/*
  * @brief: установить новое значение количества позиций энкодера ABN(3:0)
  * @param _output_positions:
  *  AS5601_OUTPUT_POSITIONS_8
@@ -1010,6 +1214,16 @@ byte AS5601::getPushbuttonThreshold(void) {
   return AS_RequestSingleRegister();
 }
 /*
+ * @brief: получить значение порога срабатывания кнопки энкодера PUSHTHR(7:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  0 - 255
+ */
+void AS5601::getPushbuttonThreshold(byte &_pushbutton_threshold) {
+  AS_SendFirstRegister(AS5601_CONFIG_REG_PUSHTHR);
+  _pushbutton_threshold = AS_RequestSingleRegister();
+}
+/*
  * @brief: установить новое значение порога срабатывания кнопки энкодера PUSHTHR(7:0)
  * @param _push_thr_value:
  *  0 - 255
@@ -1042,6 +1256,16 @@ word AS5601::getRawAngle(void) {
   return AS_RequestPairRegisters();
 }
 /* 
+ * @brief: получить чистое значение угла из регистра RAW ANGLE(11:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  0 - 4095
+ */
+void AS5601::getRawAngle(word &_raw_angle) {
+  AS_SendFirstRegister(AS5601_OUT_REG_RAW_ANGLE_H);
+  _raw_angle = AS_RequestPairRegisters();
+}
+/* 
  * @brief: получить значение угла в градусах
  * @return:
  *  0.00 - 360.00
@@ -1050,12 +1274,30 @@ float AS5601::getDegreesAngle(void) {
   return ((float)getRawAngle() * 360) / 4096;
 }
 /* 
+ * @brief: получить значение угла в градусах
+ * @note: метод работает через ссылку
+ * @return:
+ *  0.00 - 360.00
+ */
+void AS5601::getDegreesAngle(float &_degrees_angle) {
+  _degrees_angle = ((float)getRawAngle() * 360) / 4096;
+}
+/* 
  * @brief: получить значение угла в радианах
  * @return:
- *  0.00 - 6.29
+ *  0.00 - 6.28
  */
 float AS5601::getRadiansAngle(void) {
   return (getDegreesAngle() * PI) / 180;
+}
+/* 
+ * @brief: получить значение угла в радианах
+ * @note: метод работает через ссылку
+ * @return:
+ *  0.00 - 6.28
+ */
+void AS5601::getRadiansAngle(float &_radians_angle) {
+  _radians_angle = (getDegreesAngle() * PI) / 180;
 }
 /* 
  * @brief: получить угол с учетом гистерезиса 10 LSB ANGLE(11:0)
@@ -1067,6 +1309,16 @@ word AS5601::getAngle(void) {
   return AS_RequestPairRegisters();
 }
 /* 
+ * @brief: получить угол с учетом гистерезиса 10 LSB ANGLE(11:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  0 - 4095
+ */
+void AS5601::getAngle(word &_10lsb_angle) {
+  AS_SendFirstRegister(AS5601_OUT_REG_ANGLE_H);
+  _10lsb_angle = AS_RequestPairRegisters();
+}
+/* 
  * @brief: получить значение угла в градусах 10LSB
  * @return:
  *  0.00 - 360.00
@@ -1075,12 +1327,30 @@ float AS5601::getDegreesAngle10LSB(void) {
   return ((float)getAngle() * 360) / 4096;
 }
 /* 
+ * @brief: получить значение угла в градусах 10LSB
+ * @note: метод работает через ссылку
+ * @return:
+ *  0.00 - 360.00
+ */
+void AS5601::getDegreesAngle10LSB(float &_10lsb_degrees_angle) {
+  _10lsb_degrees_angle = ((float)getAngle() * 360) / 4096;
+}
+/* 
  * @brief: получить значение угла в радианах 10LSB
  * @return:
- *  0.00 - 6.29
+ *  0.00 - 6.28
  */
 float AS5601::getRadiansAngle10LSB(void) {
   return (getDegreesAngle10LSB() * PI) / 180;
+}
+/* 
+ * @brief: получить значение угла в радианах 10LSB
+ * @note: метод работает через ссылку
+ * @return:
+ *  0.00 - 6.28
+ */
+void AS5601::getRadiansAngle10LSB(float &_10lsb_radians_angle) {
+  _10lsb_radians_angle = (getDegreesAngle10LSB() * PI) / 180;
 }
 /**************************/
 /**** STATUS REGISTERS ****/
@@ -1099,6 +1369,20 @@ AS5601StatusReports AS5601::getStatus(void) {
   return (AS5601StatusReports)((AS_RequestSingleRegister() >> AS5601_STATUS_BIT_MH_3) & 0x07); // 0x07 = 0b00000111
 }
 /*
+ * @brief: получить значение регистра STATUS(5:3)
+ * @note: метод работает через ссылку
+ * @return:
+ *  AS5601_STATUS_REPORT_MD0_ML0_MH_0 - MD = 0, ML = 0, MH = 0
+ *  AS5601_STATUS_REPORT_MD0_ML1_MH_0 - MD = 0, ML = 1, MH = 0
+ *  AS5601_STATUS_REPORT_MD1_ML0_MH_0 - MD = 1, ML = 0, MH = 0
+ *  AS5601_STATUS_REPORT_MD1_ML0_MH_1 - MD = 1, ML = 0, MH = 1
+ *  AS5601_STATUS_REPORT_MD1_ML1_MH_0 - MD = 1, ML = 1, MH = 0
+ */
+void AS5601::getStatus(AS5601StatusReports &_status) {
+  AS_SendFirstRegister(AS5601_STATUS_REG);
+  _status = (AS5601StatusReports)((AS_RequestSingleRegister() >> AS5601_STATUS_BIT_MH_3) & 0x07); // 0x07 = 0b00000111
+}
+/*
  * @brief: определить наличие магнита MD:5
  * @return: 
  *  AS5601_DEFAULT_REPORT_ERROR - магнита не обнаружен
@@ -1107,6 +1391,17 @@ AS5601StatusReports AS5601::getStatus(void) {
 bool AS5601::isMagnetDetected(void) {
   AS_SendFirstRegister(AS5601_STATUS_REG);
   return (bool)((AS_RequestSingleRegister() >> AS5601_STATUS_BIT_MD_5) & 0x01);
+}
+/*
+ * @brief: определить наличие магнита MD:5
+ * @note: метод работает через ссылку
+ * @return: 
+ *  AS5601_DEFAULT_REPORT_ERROR - магнита не обнаружен
+ *  AS5601_DEFAULT_REPORT_OK - магнит обнаружен
+ */
+void AS5601::isMagnetDetected(bool &_magnet_detect) {
+  AS_SendFirstRegister(AS5601_STATUS_REG);
+  _magnet_detect = (bool)((AS_RequestSingleRegister() >> AS5601_STATUS_BIT_MD_5) & 0x01);
 }
 /*
  * @brief: определить слишком слабый магнит ML:4
@@ -1119,6 +1414,17 @@ bool AS5601::isMagnetTooWeak(void) {
   return (bool)((AS_RequestSingleRegister() >> AS5601_STATUS_BIT_ML_4) & 0x01);
 }
 /*
+ * @brief: определить слишком слабый магнит ML:4
+ * @note: метод работает через ссылку
+ * @return:
+ *  AS5601_DEFAULT_REPORT_ERROR - магнит не слишком слабый
+ *  AS5601_DEFAULT_REPORT_OK - магнит слишком слабый
+ */
+void AS5601::isMagnetTooWeak(bool &_magnet_weak) {
+  AS_SendFirstRegister(AS5601_STATUS_REG);
+  _magnet_weak = (bool)((AS_RequestSingleRegister() >> AS5601_STATUS_BIT_ML_4) & 0x01);
+}
+/*
  * @brief: определить слишком сильный магнит MH:3
  * @return:
  *  AS5601_DEFAULT_REPORT_ERROR - магнит не слишком сильный
@@ -1127,6 +1433,17 @@ bool AS5601::isMagnetTooWeak(void) {
 bool AS5601::isMagnetTooStrong(void) {
   AS_SendFirstRegister(AS5601_STATUS_REG);
   return (bool)((AS_RequestSingleRegister() >> AS5601_STATUS_BIT_MH_3) & 0x01);
+}
+/*
+ * @brief: определить слишком сильный магнит MH:3
+ * @note: метод работает через ссылку
+ * @return:
+ *  AS5601_DEFAULT_REPORT_ERROR - магнит не слишком сильный
+ *  AS5601_DEFAULT_REPORT_OK - магнит слишком сильный
+ */
+void AS5601::isMagnetTooStrong(bool &_magnet_strong) {
+  AS_SendFirstRegister(AS5601_STATUS_REG);
+  _magnet_strong = (bool)((AS_RequestSingleRegister() >> AS5601_STATUS_BIT_MH_3) & 0x01);
 }
 /*
  * @brief: получить значение автоматического усиления AGC(7:0)
@@ -1138,6 +1455,17 @@ byte AS5601::getAutomaticGainControl(void) {
   AS_SendFirstRegister(AS5601_STATUS_REG_AGC);
   return AS_RequestSingleRegister();
 }
+/*
+ * @brief: получить значение автоматического усиления AGC(7:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  0 - 255, при VCC = 5V
+ *  0 - 128, при VCC = 3.3V
+ */
+void AS5601::getAutomaticGainControl(byte &_agc) {
+  AS_SendFirstRegister(AS5601_STATUS_REG_AGC);
+  _agc = AS_RequestSingleRegister();
+}
 /* 
  * @brief: получить значение магнитуды MAGNITUDE(11:0)
  * @return:
@@ -1146,6 +1474,16 @@ byte AS5601::getAutomaticGainControl(void) {
 word AS5601::getMagnitude(void) {
   AS_SendFirstRegister(AS5601_STATUS_REG_MAGNITUDE_H);
   return AS_RequestPairRegisters();
+}
+/* 
+ * @brief: получить значение магнитуды MAGNITUDE(11:0)
+ * @note: метод работает через ссылку
+ * @return:
+ *  0 - 4095
+ */
+void AS5601::getMagnitude(word &_magnitude) {
+  AS_SendFirstRegister(AS5601_STATUS_REG_MAGNITUDE_H);
+  _magnitude = AS_RequestPairRegisters();
 }
 /************************/
 /**** BURN REGISTERS ****/
