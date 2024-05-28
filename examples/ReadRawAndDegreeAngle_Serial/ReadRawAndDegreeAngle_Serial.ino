@@ -17,13 +17,13 @@
  * 4. Менять положение магнита
  * 
  * Документация к датчику:
- * https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf
+ * https://look.ams-osram.com/m/6dd0193ab2116bc6/original/AS5601-DS000395.pdf
  * 
  * Контакты:
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.2 / Скляр Роман S-LAB
+ * Copyright (C) 2024. v1.3 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеку
@@ -77,6 +77,22 @@ void loop() {
   // Выводим значения в радианах (от 0.00 - 6.29)
   Serial.print("Угол в радианах: ");
   Serial.println(Encoder.getRadiansAngle()); // DegreesAngle*pi/180
+
+  /*
+  // Или через ссылку
+  word raw_ang = 0;
+  float degrees_ang = 0;
+  float radians_ang = 0;
+  Encoder.getRawAngle(raw_ang);
+  Encoder.getDegreesAngle(degrees_ang);
+  Encoder.getRadiansAngle(radians_ang);
+  Serial.print("Угол в АЦП: ");
+  Serial.println(raw_ang);
+  Serial.print("Угол в градусах: ");
+  Serial.println(degrees_ang);
+  Serial.print("Угол в радианах: ");
+  Serial.println(radians_ang);
+  */
 
   // Разделение и задержка
   Serial.println();

@@ -33,7 +33,7 @@
  * 5. Нажимать кнопку энкодера
  * 
  * Документация к датчику:
- * https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf
+ * https://look.ams-osram.com/m/6dd0193ab2116bc6/original/AS5601-DS000395.pdf
  * 
  * Зависимости:
  * https://github.com/adafruit/Adafruit_SSD1306
@@ -43,7 +43,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
+ * Copyright (C) 2024. v1.2 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеки
@@ -57,9 +57,9 @@
 #define BTN_ENC         PB0  // Кнопка P
 /*
 // Контакты подключения энкодера AVR
-#define PHASE_A         3 // Фаза A
-#define PHASE_B         2 // Фаза B
-#define BTN_ENC         7  // Кнопка P
+const int PHASE_A = 3; // Фаза A
+const int PHASE_B = 2; // Фаза B
+const int BTN_ENC = 7;  // Кнопка P
 */
 // Состояние кнопки энкодера
 bool btn_enc_flag = false;
@@ -112,6 +112,12 @@ void setup() {
 void loop() {
   // Выводим новые данные на экран
   createText(Encoder.getRawAngle());
+  /*
+  // Или через ссылку
+  word raw_ang = 0;
+  Encoder.getRawAngle(raw_ang);
+  createText(raw_ang);
+  */
   // Опрос кнопки и энкодера, для совершения нужных действий
   wheelEvent();
   btnEvent();

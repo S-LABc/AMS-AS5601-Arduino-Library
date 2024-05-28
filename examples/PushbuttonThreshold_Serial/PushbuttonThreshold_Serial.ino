@@ -25,13 +25,13 @@
  * 10. Откройте "Монитор порта" и нажимайте/отпускайте кнопку энкодера
  * 
  * Документация к датчику:
- * https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf
+ * https://look.ams-osram.com/m/6dd0193ab2116bc6/original/AS5601-DS000395.pdf
  * 
  * Контакты:
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.1 / Скляр Роман S-LAB
+ * Copyright (C) 2024. v1.2 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеку
@@ -40,10 +40,10 @@
 // Контакт подключения кнопки энкодера STM32
 #define BTN_ENC PB0
 // Контакт подключения кнопки энкодера AVR
-//#define BTN_ENC 7
+//const int BTN_ENC = 7;
 
 // Для хранения состояния кнопки
-boolean btn_enc_flag = false;
+bool btn_enc_flag = false;
 
 // Создаем объект Encoder с указанием ссылки на объект Wire
 AS5601 Encoder(&Wire);
@@ -77,8 +77,16 @@ void setup() {
 void loop() {
   // Опрос кнопки
   //btnEvents();
+  
   // Опредиление значений при нажатой и при отпущеной кнопке
   Serial.println(Encoder.getAutomaticGainControl());
+
+  /*
+  // Или через ссылку
+  word agc = 0;
+  Encoder.getAutomaticGainControl(agc);
+  Serial.println(agc);
+  */
 }
 
 // Обработчик кнопки

@@ -27,13 +27,13 @@
  * 6. Наблюдать за изменеием чувствительности экодера по значениям счетчика
  * 
  * Документация к датчику:
- * https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf
+ * https://look.ams-osram.com/m/6dd0193ab2116bc6/original/AS5601-DS000395.pdf
  * 
  * Контакты:
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.2 / Скляр Роман S-LAB
+ * Copyright (C) 2024. v1.3 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеку
@@ -44,8 +44,8 @@
 #define PHASE_B PB11 // Фаза B
 /*
 // Контакты подключения энкодера AVR
-#define PHASE_A 3 // Фаза A
-#define PHASE_B 2 // Фаза B
+const int PHASE_A = 3; // Фаза A
+const int PHASE_B = 2; // Фаза B
 */
 
 // Счетчик тиков (шагов) энкодера

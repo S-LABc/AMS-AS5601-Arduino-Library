@@ -29,7 +29,7 @@
  * 4. Наблюдать изменение громкости в ОС
  * 
  * Документация к датчику:
- * https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf
+ * https://look.ams-osram.com/m/6dd0193ab2116bc6/original/AS5601-DS000395.pdf
  * 
  * Зависимости:
  * https://github.com/rogerclarkmelbourne/Arduino_STM32
@@ -39,7 +39,7 @@
  ** GitHub - https://github.com/S-LABc
  ** Gmail - romansklyar15@gmail.com
  * 
- * Copyright (C) 2022. v1.2 / Скляр Роман S-LAB
+ * Copyright (C) 2024. v1.3 / Скляр Роман S-LAB
  */
 
 // Подключаем библиотеки
