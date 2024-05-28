@@ -8,6 +8,7 @@
 * Использует библиотеку **Wire.h**
 * Поддерживается большинством плат: *STM32, AVR, ESP32, ESP8266...*
 * Имеет методы с верифкацией (проверкой выполнения)
+* Имеет методы со ссылками (references)
 * [3D-модель](addons/AS5601-Case-STL/) кейса для тестов
 * Имеет несколько встроенных [примеров](examples/)
 
@@ -16,8 +17,8 @@
 * Миниатюрная [печатная плата](https://github.com/S-LABc/AMS-AS5600-AS5601-Sensors-Board)
 
 ## ✌️ Ссылки
-* [Даташит AS5601](https://ams.com/documents/20143/36005/AS5601_DS000395_3-00.pdf)
-* [Страница AS5601](https://ams.com/en/as5601)
+* [Даташит AS5601](https://look.ams-osram.com/m/6dd0193ab2116bc6/original/AS5601-DS000395.pdf)
+* [Страница AS5601](https://ams-osram.com/products/sensors/position-sensors/ams-as5601-position-sensor)
 * [Ядро ESP8266](https://github.com/esp8266/Arduino)
 * [Ядро ESP32](https://github.com/espressif/arduino-esp32)
 * [Ядро STM32 Роджера](https://github.com/rogerclarkmelbourne/Arduino_STM32)
